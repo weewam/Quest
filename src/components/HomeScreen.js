@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   Platform,
@@ -20,41 +14,29 @@ import {
   Button,
   Integer
 } from 'react-native';
-import ScrollPicker from 'react-native-picker-scrollview';
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import { updateQuest } from '../reducers/quests';
+
+import SliderItem from './HomeScreen/SliderItem';
 
 
 const { width } = Dimensions.get('window');
 const { buttonWidth} = 50;
 const { initScrollPosition } = (width/2) - (buttonWidth/2);
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+const mapStateToProps = state => ({
+  quests: state.quests,
+  selectedQuest: state.selectedQuest,
+})
 
-const showAlert = () => {
-  Alert.alert(
-     'This feature is\nnot implemented yet'
-  )
-  console.log('This feature is\nnot implemented yet');
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+  updateQuest,
+}, dispatch)
 
-const showNumber = () => {
-  Alert.alert(
-      {} + 'AAA'
-    )
-}
-const handleScroll = (event: Object) => {
-  //scrollViewPosition = event.nativeEvent.contentOffset.x;
-  Alert.alert(
-     //scrollViewPosition = event.nativeEvent.contentOffset.x + ''
-  )
-}
-
-
-export default class App extends Component<{}> {
+class HomeScreen extends Component {
   
 
   constructor() {
@@ -66,8 +48,11 @@ export default class App extends Component<{}> {
    }
 
    updatePosition1 = () => {
+    this.props.updateQuest(1);
+
     this.refs.scrollViewRef.scrollTo({x: -130, y: 0, animated: true})
    }
+
    updatePosition2 = () => {
     this.refs.scrollViewRef.scrollTo({x: -15, y: 0, animated: true})
    }
@@ -138,9 +123,6 @@ export default class App extends Component<{}> {
             <Text style={styles.instructions}>
               {"position: "}{this.state.scrollViewPosition}
             </Text>
-            <Text style={styles.instructions}>
-              {instructions}
-            </Text>
           </View>
           <View style={styles.scrollView}>
             <ScrollView
@@ -155,81 +137,14 @@ export default class App extends Component<{}> {
             showsHorizontalScrollIndicator={false}
             contentInset={{top: 0, left: 130, bottom: 0, right: 130}}
             >
-              
-              <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={this.updatePosition1}>
-                <View style={styles.outerScrollButton} borderWidth={0}>
-                  <View ref='firstButton' width={95} height={95} borderRadius={47.5} borderWidth={0} borderColor={'white'}>
-                    <View style={styles.innerScrollButton} >
-                    </View>
-                  </View>
-                  <Text style={{fontSize: 16, fontWeight: 'bold'}}></Text>
-                </View>
-              </TouchableHighlight>
-              
-              <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={this.updatePosition2}>
-                <View style={styles.outerScrollButton} >
-                  <View ref='secondButton' width={95} height={95} borderRadius={47.5} borderWidth={0} borderColor={'white'}>
-                    <View style={styles.innerScrollButton} >
-                    </View>
-                  </View>
-                  <Text style={{fontSize: 16, fontWeight: 'bold'}}></Text>
-                </View>
-              </TouchableHighlight>
-              
-              <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={this.updatePosition3} flexDirection={'column'} >
-                <View style={styles.outerScrollButton}>
-                  <View ref='thirdButton' width={95} height={95} borderRadius={47.5} borderWidth={3} borderColor={'white'}>
-                    <View style={styles.innerScrollButton} >
-                    </View>
-                  </View>
-                  <Text style={{fontSize: 16, fontWeight: 'bold'}}>3.1km</Text>
-                </View>
-              </TouchableHighlight>
-              
-
-
-              <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={this.updatePosition4} flexDirection={'column'} >
-                <View style={styles.outerScrollButton}>
-                  <View ref='thirdButton' width={95} height={95} borderRadius={47.5} borderWidth={3} borderColor={'white'}>
-                    <View style={styles.innerScrollButton} >
-                    </View>
-                  </View>
-                  <Text style={{fontSize: 16, fontWeight: 'bold'}}>{'<'}100m</Text>
-                </View>
-              </TouchableHighlight>
-              <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={this.updatePosition5} flexDirection={'column'} >
-                <View style={styles.outerScrollButton}>
-                  <View ref='thirdButton' width={95} height={95} borderRadius={47.5} borderWidth={3} borderColor={'white'}>
-                    <View style={styles.innerScrollButton} >
-                    </View>
-                  </View>
-                  <Text style={{fontSize: 16, fontWeight: 'bold'}}>890m</Text>
-                </View>
-              </TouchableHighlight>
-              <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={this.updatePosition6} flexDirection={'column'} >
-                <View style={styles.outerScrollButton}>
-                  <View ref='thirdButton' width={95} height={95} borderRadius={47.5} borderWidth={0} borderColor={'white'}>
-                    <View style={styles.innerScrollButton} >
-                    </View>
-                  </View>
-                  <Text style={{fontSize: 16, fontWeight: 'bold'}}></Text>
-                </View>
-              </TouchableHighlight>
-              <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={this.updatePosition7} flexDirection={'column'} >
-                <View style={styles.outerScrollButton}>
-                  <View ref='thirdButton' width={95} height={95} borderRadius={47.5} borderWidth={0} borderColor={'white'}>
-                    <View style={styles.innerScrollButton} >
-                    </View>
-                  </View>
-                  <Text style={{fontSize: 16, fontWeight: 'bold'}}></Text>
-                </View>
-              </TouchableHighlight>
+              <SliderItem id={1} width={20} callback={ () => { alert("test") } }/>
+              <SliderItem id={2} width={20} callback={ () => { alert("test") } }/>
+              <SliderItem id={3} width={20} callback={ () => { alert("test") } }/>
+              <SliderItem id={4} width={20} callback={ () => { alert("test") } }/>
               
             </ScrollView>
-
           </View>
         </View>
-        
       </View>
     );
   }
@@ -330,3 +245,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
