@@ -18,6 +18,8 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { locations } from '../data/locations'
+
 import { updateQuest } from '../reducers/quests';
 
 import SliderItem from './HomeScreen/SliderItem';
@@ -53,24 +55,6 @@ class HomeScreen extends Component {
     this.refs.scrollViewRef.scrollTo({x: -130, y: 0, animated: true})
    }
 
-   updatePosition2 = () => {
-    this.refs.scrollViewRef.scrollTo({x: -15, y: 0, animated: true})
-   }
-   updatePosition3 = () => {
-    this.refs.scrollViewRef.scrollTo({x: 100, y: 0, animated: true})
-   }
-   updatePosition4 = () => {
-    this.refs.scrollViewRef.scrollTo({x: 215, y: 0, animated: true})
-   }
-   updatePosition5 = () => {
-    this.refs.scrollViewRef.scrollTo({x: 330, y: 0, animated: true})
-   }
-   updatePosition6 = () => {
-    this.refs.scrollViewRef.scrollTo({x: 445, y: 0, animated: true})
-   }
-   updatePosition7 = () => {
-    this.refs.scrollViewRef.scrollTo({x: 560, y: 0, animated: true})
-   }
    scrollToPosition = () => {
     //this.refs.scrollViewRef.scrollTo({x: 662.5, y: 0, animated: true})
     this.refs.scrollViewRef.scrollTo({x: 200.5, y: 0, animated: true})
@@ -113,6 +97,12 @@ class HomeScreen extends Component {
 
   render() {
 
+    let loctionList = locations.map(function(item, i){
+      return (
+          <SliderItem key={i} {...item} width={20} callback={ () => { alert("test") } }/>
+        )
+    })
+
     return (
       <View style={styles.container}>
         <View style={styles.content}> 
@@ -137,10 +127,7 @@ class HomeScreen extends Component {
             showsHorizontalScrollIndicator={false}
             contentInset={{top: 0, left: 130, bottom: 0, right: 130}}
             >
-              <SliderItem id={1} width={20} callback={ () => { alert("test") } }/>
-              <SliderItem id={2} width={20} callback={ () => { alert("test") } }/>
-              <SliderItem id={3} width={20} callback={ () => { alert("test") } }/>
-              <SliderItem id={4} width={20} callback={ () => { alert("test") } }/>
+              {loctionList}
               
             </ScrollView>
           </View>

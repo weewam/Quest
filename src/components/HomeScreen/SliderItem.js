@@ -4,7 +4,9 @@ import {
   Text,
   View,
   TouchableHighlight,
+  Image,
 } from 'react-native';
+
 
 export default class SliderItem extends Component {
   constructor(props) {
@@ -21,13 +23,12 @@ export default class SliderItem extends Component {
    }
 
   render() {
-
+    let {image} = this.props
     return (     
       <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={ this.onPress.bind(this) }>
         <View style={styles.outerScrollButton} borderWidth={0}>
           <View ref='firstButton' width={95} height={95} borderRadius={47.5} borderWidth={0} borderColor={'white'}>
-            <View style={styles.innerScrollButton} >
-            </View>
+            <Image source={{uri: image}} style={styles.innerScrollButton} />
           </View>
           <Text style={{fontSize: 16, fontWeight: 'bold'}}></Text>
         </View>
