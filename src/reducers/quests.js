@@ -1,11 +1,10 @@
-export const initialState = {
-	selectedQuest : null,
+const initialState = {
+	selectedQuest : 0,
 }
 
 export const quests = (state = initialState, action) => {
 	switch (action.type) {
-
-		case 'UPDATE_SELECTED_QUEST': 
+		case 'SET_SELECTED_QUEST': 
 			return {
 				...state,
 				selectedQuest : action.selectedId
@@ -13,17 +12,14 @@ export const quests = (state = initialState, action) => {
 
 		default:
 			return state;
-
 	}
 }
 
-export const updateQuest = (selectQuest) => {
-  return dispatch => {
-		alert(selectQuest);
-
-    dispatch({
-      type: 'UPDATE_SELECTED_QUEST',
-      selectedId: selectQuest
-    })
-  }
+export const setQuest = (selectQuest) => {
+	return dispatch => {
+		dispatch({
+			type: 'SET_SELECTED_QUEST',
+			selectedId: selectQuest
+		})
+	}
 }

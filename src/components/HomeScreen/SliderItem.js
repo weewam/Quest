@@ -5,17 +5,28 @@ import {
   View,
   TouchableHighlight,
   Image,
+  Easing,
+  Animated,
 } from 'react-native';
 
+const borderGap = 5;
+const borderWidth = 3;
 
 export default class SliderItem extends Component {
   constructor(props) {
       super(props)
 
       this.state = {
-         scrollViewPosition: 50,
-         buttonIndex: 3
+        selectedAnim : new Animated.Value(0),
       }
+   }
+
+   componentWillReceiveProps(nextProps) {
+    Animated.timing(this.state.selectedAnim, {
+      ease: Easing.bezier(.36,.07,.19,.97),
+      toValue : nextProps.selected,
+      duration : 200,
+    }).start();
    }
 
    onPress() {
@@ -23,14 +34,33 @@ export default class SliderItem extends Component {
    }
 
   render() {
-    let {image} = this.props
+    let { itemDimension, itemSpacing, image, playable, selected } = this.props;
+    let { selectedAnim } = this.state;
+
+
+    let outerCircleDimension = itemDimension + 2*(borderGap + borderWidth);
+
+
+    let playableCircle = null;
+
+    if (playable) {
+      playableCircle = <View style={[ styles.itemPlayable, { width: outerCircleDimension, height: outerCircleDimension, borderRadius: outerCircleDimension/2 } ]}/>
+    }
+
+    let scaleInterpolation = selectedAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [1, 1.3]
+    })
+
     return (     
       <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={ this.onPress.bind(this) }>
-        <View style={styles.outerScrollButton} borderWidth={0}>
-          <View ref='firstButton' width={95} height={95} borderRadius={47.5} borderWidth={0} borderColor={'white'}>
-            <Image source={{uri: image}} style={styles.innerScrollButton} />
-          </View>
-          <Text style={{fontSize: 16, fontWeight: 'bold'}}></Text>
+        <View style={[ styles.itemContainer, { marginLeft : itemSpacing/2, marginRight : itemSpacing/2 } ]}>
+          <Animated.View style={[ styles.button, { width : itemDimension, height : itemDimension, transform: [{ scale: scaleInterpolation }] } ]}>
+            { playableCircle }
+            <Image source={{uri: image}} style={[ styles.itemImage, { width : itemDimension, height : itemDimension, borderRadius : itemDimension/2 } ]} />
+          </Animated.View>
+
+          <Text style={ styles.itemText }>10 km</Text>
         </View>
       </TouchableHighlight>
     );
@@ -38,22 +68,42 @@ export default class SliderItem extends Component {
 }
 
 const styles = StyleSheet.create({
-  innerScrollButton: {
-    backgroundColor: 'white',
+  itemContainer: {
+    alignItems : 'center',
+    paddingTop: 30,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+
+  button: {
+    position: 'relative',
+    width: 80,
+    height: 80,
+  },
+  itemPlayable: {
+    position: 'absolute',
+    zIndex: 1,
+    top: -(borderGap + borderWidth),
+    left: -(borderGap + borderWidth),
+
+    width: 80 + 2*(borderGap + borderWidth),
+    height: 80 + 2*(borderGap + borderWidth),
+
+    borderRadius: 80 + 2*(borderGap + borderWidth),
+    borderWidth: borderWidth,
+    borderColor: 'white',
+  },
+  itemImage: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    borderWidth: 2,
-    borderColor: 'white',
-    marginRight: 5,
-    marginLeft: 4.5,
-    marginTop: 4.5,
-    marginBottom: 5,
+
+    overflow: 'hidden',
   },
-  outerScrollButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 10
+  itemText: {
+    marginTop: 30,
+    fontSize: 18,
+    color: 'white',
+    fontWeight: 'bold',
   },
 });

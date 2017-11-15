@@ -1,14 +1,15 @@
-import { createStore, applyMiddleware } from 'redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
 import { quests } from './reducers/quests';
 
-const initialState = {};
+const reducers = combineReducers({
+	quests : quests
+})
 
-let store = createStore(
-  quests,
-  initialState,
+const store = createStore(
+  reducers,
   applyMiddleware(
     thunk,
     logger
