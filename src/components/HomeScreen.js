@@ -18,16 +18,25 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+//Variables
 import { locations } from '../data/locations'
 
+//Reducers
 import { updateQuest } from '../reducers/quests';
 
+//Components
+import Background from '../components/Backgrounds/Background1'
 import SliderItem from './HomeScreen/SliderItem';
 
 
-const { width } = Dimensions.get('window');
+
+const WIDTH = Dimensions.get('window').width,
+      HEIGHT = Dimensions.get('window').height;
+
 const { buttonWidth} = 50;
-const { initScrollPosition } = (width/2) - (buttonWidth/2);
+const { initScrollPosition } = (WIDTH/2) - (buttonWidth/2);
+
+
 
 const mapStateToProps = state => ({
   quests: state.quests,
@@ -39,8 +48,6 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch)
 
 class HomeScreen extends Component {
-  
-
   constructor() {
       super()
       this.state = {
@@ -49,19 +56,22 @@ class HomeScreen extends Component {
       }
    }
 
-   updatePosition1 = () => {
+
+   updatePosition1() {
     this.props.updateQuest(1);
 
     this.refs.scrollViewRef.scrollTo({x: -130, y: 0, animated: true})
    }
 
-   scrollToPosition = () => {
+
+   scrollToPosition() {
     //this.refs.scrollViewRef.scrollTo({x: 662.5, y: 0, animated: true})
     this.refs.scrollViewRef.scrollTo({x: 200.5, y: 0, animated: true})
     //Alert.alert('this.scrollToPosition: ')
    }
 
-   updateText = (event: Object) => {
+
+   updateText(event) {
 
     this.setState({scrollViewPosition: event.nativeEvent.contentOffset.x})
 
@@ -83,17 +93,8 @@ class HomeScreen extends Component {
       this.setState({buttonIndex: 7}) 
     }
 
-    //if(this.state.scrollViewPosition > 662.5) {
-    //  this.refs.scrollViewRef.scrollTo({x: 662.5, y: 0, animated: true})
-    //}
-
    }
-   
-   
-   //scrollToPosition = (event: Object, Integer: btnPos) => {
-    //event.refs.scrollViewRef.scrollTo({x: 662.5, y: 0, animated: true})
 
-  //}
 
   render() {
 
@@ -104,9 +105,14 @@ class HomeScreen extends Component {
     })
 
     return (
-      <View style={styles.container}>
-        <View style={styles.content}> 
-          <View style={styles.textContent}> 
+      <View style={styles.outerContainer}>
+        <View style={ styles.background }>
+          <Background width={ WIDTH + 10 }/>
+        </View>
+
+        <View style={styles.innerContainer}>
+
+          <View style={styles.content}> 
             <Text style={styles.welcome}>
               {"Button "}{this.state.buttonIndex}{" is selected."}
             </Text>
@@ -114,21 +120,21 @@ class HomeScreen extends Component {
               {"position: "}{this.state.scrollViewPosition}
             </Text>
           </View>
+
           <View style={styles.scrollView}>
             <ScrollView
-            ref='scrollViewRef'
-            horizontal={true} 
-            onScroll={this.updateText} 
-            scrollEventThrottle={1} 
-            decelerationRate={'fast'} 
-            snapToInterval={115} 
-            snapToAlignment={'center'} 
-            contentOffset={{x: 215, y: 0}}
-            showsHorizontalScrollIndicator={false}
-            contentInset={{top: 0, left: 130, bottom: 0, right: 130}}
+              ref='scrollViewRef'
+              horizontal={true} 
+              onScroll={this.updateText.bind(this)} 
+              scrollEventThrottle={1} 
+              decelerationRate={'fast'} 
+              snapToInterval={115} 
+              snapToAlignment={'center'} 
+              contentOffset={{x: 215, y: 0}}
+              showsHorizontalScrollIndicator={false}
+              contentInset={{top: 0, left: 130, bottom: 0, right: 130}}
             >
-              {loctionList}
-              
+              { loctionList }
             </ScrollView>
           </View>
         </View>
@@ -138,27 +144,29 @@ class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  outerContainer: {
     flex: 1,
-    flexDirection: 'column',
-    //justifyContent: 'center',
-    //alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'rgb(215, 150, 140)',
   },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    //alignItems: 'center',
-    backgroundColor: 'orange',
-  },
-  scrollView: {
 
+  background: { 
+    position: 'absolute', 
+    bottom : 0,
+    left : -10,
   },
-  textContent: {
+
+  innerContainer: {
+    flex: 1,
+  },
+
+
+  content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
   },
+
+
   scrollImages: {
     width: 80,
     height: 80,
@@ -212,24 +220,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 2,
     borderColor: 'white'
-
-  },
-  bottomBar: {
-    height: 50,
-    //flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'red',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
   },
 });
 
