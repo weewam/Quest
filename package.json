@@ -13,6 +13,7 @@
     "react-native-horizontal-picker": "0.0.1",
     "react-native-hpicker": "^1.0.5",
     "react-native-picker-scrollview": "^0.1.0",
+    "react-native-svg": "^6.0.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-persist": "^5.3.5",
