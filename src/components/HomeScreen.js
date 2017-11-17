@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  AppRegistry,
   Platform,
   StyleSheet,
   Text,
@@ -15,6 +16,8 @@ import {
   Integer
 } from 'react-native';
 
+import { StackNavigator } from 'react-navigation';
+
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -22,7 +25,10 @@ import { connect } from 'react-redux';
 import { locations } from '../data/locations'
 
 //Actions
-import { setQuest } from '../reducers/quests';
+import { 
+  setQuest,
+  setFocusedQuest
+} from '../reducers/quests';
 
 //Components
 import Background from '../components/Backgrounds/Background1'
@@ -37,14 +43,14 @@ const itemSpacing = 30;
 const buttonWidth = (WIDTH - (4 * itemSpacing)) / 3.5;
 const initScrollPosition = (WIDTH/2) - (buttonWidth + itemSpacing)/2;
 
-
-
 const mapStateToProps = state => ({
   selectedQuestIndex: state.quests.selectedQuest,
+  focusedQuestIndex: state.quests.focusedQuest,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   setQuest,
+  setFocusedQuest,
 }, dispatch)
 
 class HomeScreen extends Component {
@@ -59,18 +65,31 @@ class HomeScreen extends Component {
     setQuest(i);
    }
 
+   updateSelectedQuestOnMomentumEnds(event: Object) {
+    const { setFocusedQuest } = this.props
+
+    const index = Math.round((event.nativeEvent.contentOffset.x + initScrollPosition) /(buttonWidth+itemSpacing), 1.0)
+    setFocusedQuest(index)
+   }
+
+   
+
   render() {
     const { selectedQuestIndex } = this.props
+    const { focusedQuestIndex } = this.props
 
     const loctionList = locations.map(function(item, i){
       let pos = -initScrollPosition + i*(buttonWidth + itemSpacing);
 
       return (
-        <SliderItem key={i} {...item} selected={ selectedQuestIndex === i } itemDimension={ buttonWidth } itemSpacing={ itemSpacing } callback={ this.updateSelectedQuest.bind(this, i, pos) }/>
+        <SliderItem key={i} {...item} selected={ selectedQuestIndex === i } focused={focusedQuestIndex === i} itemDimension={ buttonWidth } itemSpacing={ itemSpacing } callback={ this.updateSelectedQuest.bind(this, i, pos) }/>
       )
     }.bind(this))
 
     const selectedQuest = locations[selectedQuestIndex];
+    const focusedQuest = locations[focusedQuestIndex]
+
+
 
     return (
       <View style={styles.outerContainer}>
@@ -87,29 +106,45 @@ class HomeScreen extends Component {
             <Text style={styles.locationText}>{ selectedQuest.company }</Text>
           </View>
 
-          <View style={styles.scrollView}>
-            <ScrollView
-              ref={ (list) => this.questScroll = list }
+          <View>
+            <View  ref={ () => this.focusedQuestView } style={styles.content}>
+              <Text style={styles.focusedText}> { focusedQuest.name} </Text>
+              <Text style={styles.focusedText}> { focusedQuest.company} </Text>
+            </View>
 
-              horizontal={true} 
-              showsHorizontalScrollIndicator={ false }
+            <View style={styles.scrollView}>
+              <ScrollView
+                ref={ (list) => this.questScroll = list }
 
-              decelerationRate={ 'fast' } 
+                horizontal={true} 
+                showsHorizontalScrollIndicator={ false }
 
-              snapToAlignment={ 'center' }
-              snapToInterval={ buttonWidth + itemSpacing } 
+                onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
 
-              contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
-              contentOffset={{ x : -initScrollPosition }}
-            >
-              { loctionList }
-            </ScrollView>
+                decelerationRate={ 'fast' } 
+
+                snapToAlignment={ 'center' }
+                snapToInterval={ buttonWidth + itemSpacing } 
+
+                contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
+                contentOffset={{ x : -initScrollPosition }}
+              >
+                { loctionList }
+              </ScrollView>
+            </View>
+            <Button style={styles.button} title={"QuestScreen"}
+              style={{ marginTop: 10 }}
+              onPress={() => this.props.navigation.navigate("QuestScreen")}>
+              <Text>Goto QuestScreen</Text>
+            </Button>
           </View>
         </View>
       </View>
     );
   }
 }
+
+
 
 const styles = StyleSheet.create({
   outerContainer: {
@@ -128,18 +163,24 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    flex: 1,
+    flex: 2,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 30,
   },
   locationText: {
     fontSize: 24,
     fontWeight: '500',
     color: 'white',
   },
-
+  focusedText: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: 'white',
+  },
   scrollView: {
     paddingBottom: 80,
+    paddingTop:0,
   }
 });
 

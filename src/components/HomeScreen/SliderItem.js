@@ -27,6 +27,8 @@ export default class SliderItem extends Component {
       toValue : nextProps.selected,
       duration : 200,
     }).start();
+    
+
    }
 
    onPress() {
@@ -34,7 +36,7 @@ export default class SliderItem extends Component {
    }
 
   render() {
-    let { itemDimension, itemSpacing, image, playable, selected } = this.props;
+    let { itemDimension, itemSpacing, image, playable, selected, focused} = this.props;
     let { selectedAnim } = this.state;
 
 
@@ -59,7 +61,7 @@ export default class SliderItem extends Component {
             { playableCircle }
             <Image source={{uri: image}} style={[ styles.itemImage, { width : itemDimension, height : itemDimension, borderRadius : itemDimension/2 } ]} />
           </Animated.View>
-
+          
           <Text style={ styles.itemText }>10 km</Text>
         </View>
       </TouchableHighlight>
@@ -106,4 +108,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+  
 });
