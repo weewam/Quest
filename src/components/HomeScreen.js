@@ -104,6 +104,11 @@ class HomeScreen extends Component {
             
             <Text style={styles.locationText}>{ selectedQuest.name }</Text>
             <Text style={styles.locationText}>{ selectedQuest.company }</Text>
+            <Button style={styles.button} overrides={true} fontSize={24} color={'white'} title={"Go to quest >"}
+              style={{ marginTop: 10 }}
+              onPress={() => this.props.navigation.navigate("QuestScreen")}>
+              
+            </Button>
           </View>
 
           <View>
@@ -132,11 +137,7 @@ class HomeScreen extends Component {
                 { loctionList }
               </ScrollView>
             </View>
-            <Button style={styles.button} title={"QuestScreen"}
-              style={{ marginTop: 10 }}
-              onPress={() => this.props.navigation.navigate("QuestScreen")}>
-              <Text>Goto QuestScreen</Text>
-            </Button>
+
           </View>
         </View>
       </View>
@@ -169,6 +170,11 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   locationText: {
+    fontSize: 24,
+    fontWeight: '500',
+    color: 'white',
+  },
+  button:  {
     fontSize: 24,
     fontWeight: '500',
     color: 'white',
