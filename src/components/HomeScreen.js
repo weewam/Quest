@@ -60,6 +60,9 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 class HomeScreen extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      curTime : new Date().getTime()
+    }
   }
 
   updateSelectedQuest(i, pos) {
@@ -70,6 +73,12 @@ class HomeScreen extends Component {
   }
 
   async componentDidMount() {
+
+    setInterval( () => {
+      this.setState({
+        curTime : new Date().getTime()
+      })
+    },1000)
     console.log("Get permission")
     const { setPosition } = this.props
     try {
@@ -116,7 +125,7 @@ class HomeScreen extends Component {
   }
 
   render() {
-    
+
     const { focusedQuestIndex } = this.props
 
     const { selectedQuestIndex, currentPosition } = this.props
@@ -131,7 +140,7 @@ class HomeScreen extends Component {
 
     const selectedQuest = locations[selectedQuestIndex];
     const focusedQuest = locations[focusedQuestIndex]
-
+    const currentTime = new Date(selectedQuest.countdown - this.state.curTime);
 
 
     return (
@@ -146,7 +155,7 @@ class HomeScreen extends Component {
             <Text style={styles.locationText}>{ selectedQuest.distance }</Text>
 
             <Text style={styles.locationText}>{ selectedQuest.place }</Text>
-            <Text style={styles.locationText}>{ selectedQuest.countdown }</Text>
+          <Text style={styles.locationText}>{ currentTime.getHours() > 0 && currentTime.getHours()} h {currentTime.getMinutes()} m {currentTime.getSeconds()} s</Text>
             <Button style={styles.button} overrides={true} fontSize={24} color={'white'} title={"Go to quest >"}
               style={{ marginTop: 10 }}
               onPress={() => this.props.navigation.navigate("QuestScreen")}>
