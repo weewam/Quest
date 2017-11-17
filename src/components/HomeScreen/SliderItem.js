@@ -60,7 +60,7 @@ export default class SliderItem extends Component {
             <Image source={{ uri: image }} style={[styles.itemImage, { width: itemDimension, height: itemDimension, borderRadius: itemDimension / 2 }]} />
           </Animated.View>
 
-          <Text style={styles.itemText}> {distance} km </Text>
+           <Text style={styles.itemText}> {!selected && distance + ' km'} </Text>
         </View>
       </TouchableHighlight>
     );

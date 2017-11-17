@@ -1,5 +1,5 @@
 const initialState = {
-    coords: { lat: 0, long: 0 }
+    coords: { lat: 59.333184, long: 18.076914 },
 }
 
 export const position = (state = initialState, action) => {

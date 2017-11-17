@@ -17,6 +17,7 @@ import {
   PermissionsAndroid
 } from 'react-native';
 
+import { distanceFromPhone } from '../MapUtils'
 import { StackNavigator } from 'react-navigation';
 
 import { bindActionCreators } from 'redux';
@@ -152,7 +153,7 @@ class HomeScreen extends Component {
         <View style={styles.innerContainer}>
 
           <View style={styles.content}>
-            <Text style={styles.locationText}>{ selectedQuest.distance }</Text>
+            <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
 
             <Text style={styles.locationText}>{ selectedQuest.place }</Text>
           <Text style={styles.locationText}>{ currentTime.getHours() > 0 && currentTime.getHours()} h {currentTime.getMinutes()} m {currentTime.getSeconds()} s</Text>
