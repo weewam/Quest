@@ -3,9 +3,10 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
 import { quests } from './reducers/quests';
-
+import { position } from './reducers/position'
 const reducers = combineReducers({
-	quests : quests
+  quests: quests,
+  position: position
 })
 
 const store = createStore(
