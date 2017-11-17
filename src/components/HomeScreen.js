@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  AppRegistry,
   Platform,
   StyleSheet,
   Text,
@@ -16,6 +17,8 @@ import {
   PermissionsAndroid
 } from 'react-native';
 
+import { StackNavigator } from 'react-navigation';
+
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -23,8 +26,11 @@ import { connect } from 'react-redux';
 import { locations } from '../data/locations'
 
 //Actions
-import { setQuest } from '../reducers/quests';
 import { setPosition } from '../reducers/position';
+import {
+  setQuest,
+  setFocusedQuest
+} from '../reducers/quests';
 
 //Components
 import Background from '../components/Backgrounds/Background1'
@@ -39,16 +45,16 @@ const itemSpacing = 30;
 const buttonWidth = (WIDTH - (4 * itemSpacing)) / 3.5;
 const initScrollPosition = (WIDTH / 2) - (buttonWidth + itemSpacing) / 2;
 
-
-
 const mapStateToProps = state => ({
   selectedQuestIndex: state.quests.selectedQuest,
-  currentPosition: state.position.coords
+  currentPosition: state.position.coords,
+  focusedQuestIndex: state.quests.focusedQuest,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   setQuest,
-  setPosition
+  setPosition,
+  setFocusedQuest
 }, dispatch)
 
 class HomeScreen extends Component {
@@ -97,25 +103,35 @@ class HomeScreen extends Component {
       console.warn(err)
     }
 
+   updateSelectedQuestOnMomentumEnds(event: Object) {
+    const { setFocusedQuest } = this.props
 
-  }
+    const index = Math.round((event.nativeEvent.contentOffset.x + initScrollPosition) /(buttonWidth+itemSpacing), 1.0)
+    setFocusedQuest(index)
+   }
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchId);
   }
 
   render() {
+    const { selectedQuestIndex } = this.props
+    const { focusedQuestIndex } = this.props
+
     const { selectedQuestIndex, currentPosition } = this.props
 
     const loctionList = locations.map(function (item, i) {
       let pos = -initScrollPosition + i * (buttonWidth + itemSpacing);
       return (
-        <SliderItem key={i} {...item} selected={selectedQuestIndex === i} itemDimension={buttonWidth} eventLocation={item.coords}
+        <SliderItem key={i} {...item} selected={selectedQuestIndex === i}  focused={focusedQuestIndex === i} itemDimension={buttonWidth} eventLocation={item.coords}
           itemSpacing={itemSpacing} callback={this.updateSelectedQuest.bind(this, i, pos)} phoneLocation={currentPosition} />
       )
     }.bind(this))
 
     const selectedQuest = locations[selectedQuestIndex];
+    const focusedQuest = locations[focusedQuestIndex]
+
+
 
     return (
       <View style={styles.outerContainer}>
@@ -126,35 +142,51 @@ class HomeScreen extends Component {
         <View style={styles.innerContainer}>
 
           <View style={styles.content}>
-            <Text style={styles.locationText}>{selectedQuest.adress}</Text>
+            <Text style={styles.locationText}>{ selectedQuest.distance }</Text>
 
-            <Text style={styles.locationText}>{selectedQuest.name}</Text>
-            <Text style={styles.locationText}>{selectedQuest.company}</Text>
+            <Text style={styles.locationText}>{ selectedQuest.place }</Text>
+            <Text style={styles.locationText}>{ selectedQuest.countdown }</Text>
+            <Button style={styles.button} overrides={true} fontSize={24} color={'white'} title={"Go to quest >"}
+              style={{ marginTop: 10 }}
+              onPress={() => this.props.navigation.navigate("QuestScreen")}>
+
+            </Button>
           </View>
 
-          <View style={styles.scrollView}>
-            <ScrollView
-              ref={(list) => this.questScroll = list}
+          <View>
+            <View  ref={ () => this.focusedQuestView } style={styles.content}>
+              <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
+              <Text style={styles.focusedText}> { focusedQuest.name} </Text>
+            </View>
 
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
+            <View style={styles.scrollView}>
+              <ScrollView
+                ref={ (list) => this.questScroll = list }
 
-              decelerationRate={'fast'}
+                horizontal={true}
+                showsHorizontalScrollIndicator={ false }
 
-              snapToAlignment={'center'}
-              snapToInterval={buttonWidth + itemSpacing}
+                onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
 
-              contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
-              contentOffset={{ x: -initScrollPosition }}
-            >
-              {loctionList}
-            </ScrollView>
+                decelerationRate={ 'fast' }
+
+                snapToAlignment={ 'center' }
+                snapToInterval={ buttonWidth + itemSpacing }
+
+                contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
+                contentOffset={{ x : -initScrollPosition }}
+              >
+                { loctionList }
+              </ScrollView>
+            </View>
           </View>
         </View>
       </View>
     );
   }
 }
+
+
 
 const styles = StyleSheet.create({
   outerContainer: {
@@ -164,8 +196,8 @@ const styles = StyleSheet.create({
 
   background: {
     position: 'absolute',
-    bottom: 0,
-    left: -10,
+    bottom : 0,
+    left : -10
   },
 
   innerContainer: {
@@ -173,18 +205,29 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    flex: 1,
+    flex: 2,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 30,
   },
   locationText: {
     fontSize: 24,
     fontWeight: '500',
     color: 'white',
   },
-
+  button:  {
+    fontSize: 24,
+    fontWeight: '500',
+    color: 'white',
+  },
+  focusedText: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: 'white',
+  },
   scrollView: {
     paddingBottom: 80,
+    paddingTop:0,
   }
 });
 
