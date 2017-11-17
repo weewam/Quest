@@ -102,6 +102,7 @@ class HomeScreen extends Component {
     } catch (err) {
       console.warn(err)
     }
+  }
 
    updateSelectedQuestOnMomentumEnds(event: Object) {
     const { setFocusedQuest } = this.props
@@ -115,7 +116,7 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { selectedQuestIndex } = this.props
+    
     const { focusedQuestIndex } = this.props
 
     const { selectedQuestIndex, currentPosition } = this.props
