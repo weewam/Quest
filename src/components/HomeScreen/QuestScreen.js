@@ -18,11 +18,23 @@ class QuestScreen extends Component{
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>
-        THIS IS THE Quest Screen
+        McDonald
+        McHalloween Party
       </Text>
-      <Button title={"Go back"}
+      <Text style={styles.question}>
+        Question 1
+      </Text>
+      <Text style={styles.description}>
+        1+1=?
+      </Text>
+      <Button title={"Answer: 1"}
               style={{ marginTop: 10 }}
-              onPress={() => this.props.navigation.goBack(null)}>
+              onPress={() => this.props.navigation.navigate("FailedScreen")}>
+              <Text>Go Back</Text>
+            </Button>
+      <Button title={"Answer: 2"}
+              style={{ marginTop: 10 }}
+              onPress={() => this.props.navigation.navigate("SuccessScreen")}>
               <Text>Go Back</Text>
             </Button>
     </View>
@@ -39,6 +51,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(215, 150, 140)',
   },
   welcome: {
+    fontSize: 30,
+    textAlign: 'center',
+    margin: 10,
+  },
+  question: {
+    fontSize: 40,
+    textAlign: 'center',
+    margin: 10,
+  },
+  description: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,

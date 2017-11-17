@@ -18,12 +18,17 @@ class FailedScreen extends Component{
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>
-        THIS IS THE Failed Screen
+        You failed
       </Text>
-      <Button title={"Go back"}
+      <Button title={"Pay 3K to skip"}
               style={{ marginTop: 10 }}
               onPress={() => this.props.navigation.navigate("HomeScreen")}>
-              <Text>Go Back</Text>
+              <Text>Pay 3K to skip</Text>
+            </Button>
+      <Button title={"Quit"}
+              style={{ marginTop: 10 }}
+              onPress={() => this.props.navigation.navigate("HomeScreen")}>
+              <Text>Quit</Text>
             </Button>
     </View>
   );

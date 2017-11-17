@@ -18,12 +18,12 @@ class SuccessScreen extends Component{
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>
-        THIS IS THE Success Screen
+        You won
       </Text>
-      <Button title={"Go back"}
+      <Button title={"Quit"}
               style={{ marginTop: 10 }}
               onPress={() => this.props.navigation.navigate("HomeScreen")}>
-              <Text>Go Back</Text>
+              <Text>Quit</Text>
             </Button>
     </View>
   );
