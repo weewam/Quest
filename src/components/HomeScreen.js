@@ -25,7 +25,7 @@ import { connect } from 'react-redux';
 import { locations } from '../data/locations'
 
 //Actions
-import { 
+import {
   setQuest,
   setFocusedQuest
 } from '../reducers/quests';
@@ -72,7 +72,7 @@ class HomeScreen extends Component {
     setFocusedQuest(index)
    }
 
-   
+
 
   render() {
     const { selectedQuestIndex } = this.props
@@ -99,37 +99,37 @@ class HomeScreen extends Component {
 
         <View style={styles.innerContainer}>
 
-          <View style={styles.content}> 
-            <Text style={styles.locationText}>{ selectedQuest.adress }</Text>
-            
-            <Text style={styles.locationText}>{ selectedQuest.name }</Text>
-            <Text style={styles.locationText}>{ selectedQuest.company }</Text>
+          <View style={styles.content}>
+            <Text style={styles.locationText}>{ selectedQuest.distance }</Text>
+
+            <Text style={styles.locationText}>{ selectedQuest.place }</Text>
+            <Text style={styles.locationText}>{ selectedQuest.countdown }</Text>
             <Button style={styles.button} overrides={true} fontSize={24} color={'white'} title={"Go to quest >"}
               style={{ marginTop: 10 }}
               onPress={() => this.props.navigation.navigate("QuestScreen")}>
-              
+
             </Button>
           </View>
 
           <View>
             <View  ref={ () => this.focusedQuestView } style={styles.content}>
+              <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
               <Text style={styles.focusedText}> { focusedQuest.name} </Text>
-              <Text style={styles.focusedText}> { focusedQuest.company} </Text>
             </View>
 
             <View style={styles.scrollView}>
               <ScrollView
                 ref={ (list) => this.questScroll = list }
 
-                horizontal={true} 
+                horizontal={true}
                 showsHorizontalScrollIndicator={ false }
 
                 onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
 
-                decelerationRate={ 'fast' } 
+                decelerationRate={ 'fast' }
 
                 snapToAlignment={ 'center' }
-                snapToInterval={ buttonWidth + itemSpacing } 
+                snapToInterval={ buttonWidth + itemSpacing }
 
                 contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
                 contentOffset={{ x : -initScrollPosition }}
@@ -153,8 +153,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(215, 150, 140)',
   },
 
-  background: { 
-    position: 'absolute', 
+  background: {
+    position: 'absolute',
     bottom : 0,
     left : -10,
   },
