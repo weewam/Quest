@@ -154,9 +154,8 @@ class HomeScreen extends Component {
 
           <View style={styles.content}>
             <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
-
             <Text style={styles.locationText}>{ selectedQuest.place }</Text>
-          <Text style={styles.locationText}>{ currentTime.getHours() > 0 && currentTime.getHours()} h {currentTime.getMinutes()} m {currentTime.getSeconds()} s</Text>
+            <Text style={styles.locationText}>{ currentTime.getHours() > 0 && currentTime.getHours()} h {currentTime.getMinutes()} m {currentTime.getSeconds()} s</Text>
             <Button style={styles.button} overrides={true} fontSize={24} color={'white'} title={"Go to quest >"}
               style={{ marginTop: 10 }}
               onPress={() => this.props.navigation.navigate("QuestScreen")}>
