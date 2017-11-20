@@ -76,10 +76,19 @@ class QuestScreen extends Component{
           </Text>
         </View>)
       } else if(this.state.questScreenModal === "quiz"){
+        const questionsList = locations[this.props.selectedQuestIndex].questions[1].map(
+          function (item, i) {
+            return (
+              <Text key={i}>{(i+1) + ". " +  locations[this.props.selectedQuestIndex].questions[1][i] + "\n"}</Text>
+            )
+    }.bind(this))
         return(
         <View>
           <Text>
-            {locations[this.props.selectedQuestIndex].questions.toString()}
+            {locations[this.props.selectedQuestIndex].questions[0][0] + "\n"}
+          </Text>
+          <Text>
+            {questionsList}
           </Text>
         </View>
         )
