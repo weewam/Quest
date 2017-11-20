@@ -20,6 +20,8 @@ export const locations = [
 		image: 'https://i.imgur.com/swWillV.jpg',
 		coords: { lat: 59.329592, long: 18.070607 },
 		playable: 0,
+		about: "Ocean Bus är ett nytt och alldeles unikt inslag bland Stockholms sightseeingturer. Ombord på amfibiebussen får du en guidad tur av några av stans största sevärdheter, både på land och från vattnet. Turerna startar på Strömgatan vid Kungliga Operan. ",
+		
 	},
 	{
 		distance: "980 m",
@@ -30,6 +32,8 @@ export const locations = [
 		image: 'https://i.imgur.com/V14C7ma.jpg',
 		coords: { lat: 59.325312, long: 18.066684 },
 		playable: 1,
+		about: "Ta chansen och upplev Stockholm från takåsarna på guidade turer, väl förankrad i säkerhetssystem. En unik kombination av klättring och sightseeing för dig som inte är höjdrädd.",
+
 	},
 	{
 		distance: "980 m",
@@ -40,6 +44,8 @@ export const locations = [
 		image: 'https://i.imgur.com/5sDHCIm.jpg',
 		coords: { lat: 59.368118, long: 18.038994 },
 		playable: 0,
+		about: "Hyr kanot eller kajak och paddla i Ekoparken förbi slott och vackra parkområden. Öppet dagligen under juni-augusti. Förboka för paddling under maj och september.",
+		
 	},
 	{
 		distance: "980 m",
