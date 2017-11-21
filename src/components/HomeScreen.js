@@ -67,10 +67,15 @@ class HomeScreen extends Component {
   }
 
   updateSelectedQuest(i, pos) {
-    const { setQuest } = this.props;
+    const { setQuest, navigation, selectedQuestIndex } = this.props;
+    const selectedQuest = locations[i];
 
-    this.questScroll.scrollTo({ x: pos, animated: true })
-    setQuest(i);
+    if ((selectedQuestIndex === i) && selectedQuest.playable) {
+      navigation.navigate("QuestScreen")
+    } else {
+      this.questScroll.scrollTo({ x: pos, animated: true })
+      setQuest(i);
+    }
   }
 
   async componentDidMount() {
