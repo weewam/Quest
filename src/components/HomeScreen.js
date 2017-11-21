@@ -14,7 +14,7 @@ import {
   Dimensions,
   Button,
   Integer,
-  PermissionsAndroid
+  PermissionsAndroid,
 } from 'react-native';
 
 import { distanceFromPhone } from '../MapUtils'
@@ -206,7 +206,30 @@ class HomeScreen extends Component {
             </View>
         </View>
         <View style={styles.innerContainer}>
-            <Text>test</Text>
+            <View style={styles.content}>
+              <Text>User Name</Text>
+            </View>
+            <ScrollView style={styles.scrollView} horizontal={true}>
+              <View>
+                <Text>1</Text>
+              </View>
+              <View>
+                <Text>2</Text>
+              </View>
+            </ScrollView>
+
+              <View>
+              <TouchableHighlight>
+                <Text style={styles.buttonText}>Profile</Text>
+              </TouchableHighlight>
+                <Text style={styles.buttonText}>Store</Text>
+                <Text style={styles.buttonText}>Create a Quest</Text>
+                <Text style={styles.buttonText}>Find a secret Quest</Text>
+                <Text style={styles.buttonText}>Reputation</Text>
+                <Text style={styles.buttonText}>Settings</Text>
+              </View>
+
+
         </View>
         </ScrollView>
       </View>
@@ -230,6 +253,8 @@ const styles = StyleSheet.create({
 
   innerContainer: {
     flex: 1,
+    width: WIDTH,
+    height: HEIGHT
   },
 
   content: {
@@ -256,6 +281,14 @@ const styles = StyleSheet.create({
   scrollView: {
     paddingBottom: 80,
     paddingTop:0,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: 'white',
+    flexDirection: 'row',
+    height: 50,
+    textAlign: 'center',
+    justifyContent: 'center'
   }
 });
 
