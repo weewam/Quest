@@ -11,6 +11,7 @@ export const locations = [
 		about: "Experience the joyful and magical world of Gröna Lund, Stockholm´s amusement park. A day spent at Gröna Lund is a memorable one, whether you dine in one of the restaurants, enjoy a pentathlon, a live concert or one of the 30 exciting rides. Gröna Lund is open from late spring (April/March) to September.",
 		// Questions format: [[Question][Answer1, Answer2, ..., AnswerK], [CorrectAnswer]]
 		questions: [["Vad är Gröna Lund?"],["En Djurpark","Sveriges bästa nöjesfält", "En sagofigur"], 2],
+		rewards: ["Master Chest", "Tomorrow event Ticket", "30% Discount", "120 points", "1.2k"]
 	},
 	{
 		distance: "980 m",
@@ -22,7 +23,7 @@ export const locations = [
 		coords: { lat: 59.329592, long: 18.070607 },
 		playable: 0,
 		about: "Ocean Bus är ett nytt och alldeles unikt inslag bland Stockholms sightseeingturer. Ombord på amfibiebussen får du en guidad tur av några av stans största sevärdheter, både på land och från vattnet. Turerna startar på Strömgatan vid Kungliga Operan. ",
-		
+
 	},
 	{
 		distance: "980 m",

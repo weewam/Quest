@@ -142,7 +142,9 @@ class HomeScreen extends Component {
     const selectedQuest = locations[selectedQuestIndex];
     const focusedQuest = locations[focusedQuestIndex]
     const currentTime = new Date(selectedQuest.countdown - this.state.curTime);
-
+    const rewardList = focusedQuest.rewards.map(reward => (
+      <Text style={styles.focusedText}> { reward } </Text>
+    ));
 
     return (
       <View style={styles.outerContainer}>
@@ -151,7 +153,10 @@ class HomeScreen extends Component {
         </View>
 
         <View style={styles.innerContainer}>
-
+        <ScrollView horizontal={true}>
+          <View style={styles.content}>
+            {rewardList}
+          </View>
           <View style={styles.content}>
             <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
             <Text style={styles.locationText}>{ selectedQuest.place }</Text>
@@ -162,12 +167,14 @@ class HomeScreen extends Component {
 
             </Button>
           </View>
-
+        </ScrollView>
           <View>
-            <View  ref={ () => this.focusedQuestView } style={styles.content}>
-              <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
-              <Text style={styles.focusedText}> { focusedQuest.name} </Text>
-            </View>
+
+              <View  ref={ () => this.focusedQuestView } style={styles.content}>
+                <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
+                <Text style={styles.focusedText}> { focusedQuest.name} </Text>
+              </View>
+
 
             <View style={styles.scrollView}>
               <ScrollView
