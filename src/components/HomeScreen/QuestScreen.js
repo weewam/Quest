@@ -12,31 +12,41 @@ import {
 
 import { StackNavigator } from 'react-navigation';
 
-import { locations } from '../../data/locations'
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import { locations } from '../../data/locations';
+
+import InfoModal from './InfoModal';
+import QuizModal from './QuizModal';
 
 import {
   setQuest,
-  setFocusedQuest
+  setFocusedQuest,
+  nextQuestion,
 } from '../../reducers/quests';
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+
 
 //Contants
 const WIDTH = Dimensions.get('window').width,
   HEIGHT = Dimensions.get('window').height,
-  IMAGE_SIZE = WIDTH*0.7;
+  IMAGE_SIZE = WIDTH*0.7,
+  ANSWERS = 1,
+  QUESTIONS = 0;
 
 
 const mapStateToProps = state => ({
   selectedQuestIndex: state.quests.selectedQuest,
   currentPosition: state.position.coords,
   focusedQuestIndex: state.quests.focusedQuest,
+  selectedQuestion: state.quests.selectedQuestion,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   setQuest,
-  setFocusedQuest
+  setFocusedQuest,
+  nextQuestion,
 }, dispatch)
 
 class QuestScreen extends Component{
@@ -45,6 +55,7 @@ class QuestScreen extends Component{
         this.state.showInfo = locations[this.props.selectedQuestIndex].about != null
         this.state.showQuestions = locations[this.props.selectedQuestIndex].questions != null
      }
+
     state = {
       modalVisible: false,
       showInfo: false,
@@ -65,40 +76,28 @@ class QuestScreen extends Component{
         <Text>QUIZ</Text>
         )
     }
-   
-    renderQuestScreenModal () {
-      if(this.state.questScreenModal === "info") {
-        return(
-          <View style={styles.aboutContainer}>
-          <Text style={styles.aboutTitle}> About {locations[this.props.selectedQuestIndex].name} </Text>
-          <Text style={styles.aboutText}>
-            {locations[this.props.selectedQuestIndex].about}
-          </Text>
-        </View>)
-      } else if(this.state.questScreenModal === "quiz"){
-        const questionsList = locations[this.props.selectedQuestIndex].questions[1].map(
-          function (item, i) {
-            return (
-              <Text key={i}>{(i+1) + ". " +  locations[this.props.selectedQuestIndex].questions[1][i] + "\n"}</Text>
-            )
-    }.bind(this))
-        return(
-        <View>
-          <Text>
-            {locations[this.props.selectedQuestIndex].questions[0][0] + "\n"}
-          </Text>
-          <Text>
-            {questionsList}
-          </Text>
-        </View>
-        )
-      }
+
+    updateQuestion(){
+      this.props.nextQuestion()
     }
 
+    closeModal() {
+      this.setModalVisible(!this.state.modalVisible)
+    }
 
    render() {
-    const { selectedQuestIndex, currentPosition } = this.props
+    const { selectedQuestIndex, currentPosition, selectedQuestion } = this.props
     const selectedQuest = locations[selectedQuestIndex];
+
+    let modal = null;
+
+    if (this.state.questScreenModal === "info") {
+      modal = <InfoModal selectedQuest={locations[this.props.selectedQuestIndex]}/>
+    }
+
+    if (this.state.questScreenModal === "quiz") {
+      modal = <QuizModal lastQuestion={selectedQuestion[this.props.selectedQuestIndex] === (locations[this.props.selectedQuestIndex].questions.length-1)} selectedQuestion={locations[this.props.selectedQuestIndex].questions[this.props.selectedQuestion[this.props.selectedQuestIndex]]} callback={this.updateQuestion.bind(this)} closeModal={this.closeModal.bind(this)}/>
+    }
 
     return (
       <View style={styles.outerView}>
@@ -169,7 +168,9 @@ class QuestScreen extends Component{
                     </View>
                   </TouchableHighlight>
                 </View>
-                {this.renderQuestScreenModal()}
+
+                { modal }
+
                </View>
               </Modal>
             </View>
@@ -234,39 +235,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500',
     color: 'white',
-  },
-  aboutContainer: {
-    borderWidth: 2,
-    borderColor: 'white',
-    borderRadius: 20,
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 15,
-  },
-  aboutText: {
-    color: 'white',
-    marginLeft: 15,
-    marginRight: 15,
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 10,
-    paddingRight: 10,
-    textAlign: 'center',
-    fontWeight: '500',
-    fontSize: 20,
-  },
-  aboutTitle: {
-    color: 'white',
-    marginLeft: 15,
-    marginRight: 15,
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 10,
-    paddingRight: 10,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 30,
-
   },
   closeButton: {
     fontSize: 30,
