@@ -9,8 +9,13 @@ export const locations = [
 		coords: { lat: 59.323376, long: 18.096395 },
 		playable: 1,
 		about: "Experience the joyful and magical world of Gröna Lund, Stockholm´s amusement park. A day spent at Gröna Lund is a memorable one, whether you dine in one of the restaurants, enjoy a pentathlon, a live concert or one of the 30 exciting rides. Gröna Lund is open from late spring (April/March) to September.",
-		// Questions format: [[Question][Answer1, Answer2, ..., AnswerK], [CorrectAnswer]]
-		questions: [["Vad är Gröna Lund?"],["En Djurpark","Sveriges bästa nöjesfält", "En sagofigur"], 2],
+		// Questions format: [[Question][Answer1, Answer2, ..., AnswerK], CorrectAnswer]
+		questions: 
+		[
+			["Vad är Gröna Lund?",["En Djurpark","Sveriges bästa nöjesfält", "En sagofigur"], 2], 
+			["Vart ligger Gröna Lund?",["Djurgården","Södermalm", "Kungsholmen"], 1], 
+			["Hur många besökare har Gröna Lund varje år?",["1,000,000","10,000,000", "100,000,000"], 2],
+		], 
 	},
 	{
 		distance: "980 m",
