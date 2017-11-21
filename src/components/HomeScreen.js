@@ -32,6 +32,7 @@ import {
   setQuest,
   setFocusedQuest
 } from '../reducers/quests';
+import Swiper from '../reducers/swiper';
 
 //Components
 import Background from '../components/Backgrounds/Background1'
@@ -162,48 +163,52 @@ class HomeScreen extends Component {
         <View style={styles.background}>
           <Background width={WIDTH + 10} />
         </View>
-
+        <ScrollView >
         <View style={styles.innerContainer}>
-        <ScrollView horizontal={true}>
-          <View style={styles.content}>
-            {rewardList}
-          </View>
-          <View style={styles.content}>
-            <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
-            <Text style={styles.locationText}>{ selectedQuest.place }</Text>
-            <Text style={styles.locationText}>{ days} D { hours } H { minutes } M { remainingSeconds } S</Text>
-          </View>
-        </ScrollView>
-          <View>
-
-              <View  ref={ () => this.focusedQuestView } style={styles.content}>
-                <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
-                <Text style={styles.focusedText}> { focusedQuest.name} </Text>
+            <Swiper>
+              <View style={styles.content}>
+                <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
+                <Text style={styles.locationText}>{ selectedQuest.place }</Text>
+                <Text style={styles.locationText}>{ days} D { hours } H { minutes } M { remainingSeconds } S</Text>
               </View>
+              <View style={styles.content}>
+                {rewardList}
+              </View>
+            </Swiper>
+            <View>
+
+                <View  ref={ () => this.focusedQuestView } style={styles.content}>
+                  <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
+                  <Text style={styles.focusedText}> { focusedQuest.name} </Text>
+                </View>
 
 
-            <View style={styles.scrollView}>
-              <ScrollView
-                ref={ (list) => this.questScroll = list }
+              <View style={styles.scrollView}>
+                <ScrollView
+                  ref={ (list) => this.questScroll = list }
 
-                horizontal={true}
-                showsHorizontalScrollIndicator={ false }
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={ false }
 
-                onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
+                  onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
 
-                decelerationRate={ 'fast' }
+                  decelerationRate={ 'fast' }
 
-                snapToAlignment={ 'center' }
-                snapToInterval={ buttonWidth + itemSpacing }
+                  snapToAlignment={ 'center' }
+                  snapToInterval={ buttonWidth + itemSpacing }
 
-                contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
-                contentOffset={{ x : -initScrollPosition }}
-              >
-                { loctionList }
-              </ScrollView>
+                  contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
+                  contentOffset={{ x : -initScrollPosition }}
+                >
+                  { loctionList }
+                </ScrollView>
+              </View>
             </View>
-          </View>
         </View>
+        <View style={styles.innerContainer}>
+            <Text>test</Text>
+        </View>
+        </ScrollView>
       </View>
     );
   }
