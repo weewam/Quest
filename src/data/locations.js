@@ -3,7 +3,7 @@ export const locations = [
 		distance: "980 m",
     name: 'Lustiga Huset',
 		provider: 'Gröna Lund',
-		countdown: new Date().getTime() + 1000 * 100000,
+		countdown: new Date("2017-12-31"),
     place:  'Gröna Lund',
 		image: 'https://i.imgur.com/6kpBgPB.jpg',
 		coords: { lat: 59.323376, long: 18.096395 },

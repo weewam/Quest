@@ -146,9 +146,15 @@ class HomeScreen extends Component {
 
     const selectedQuest = locations[selectedQuestIndex];
     const focusedQuest = locations[focusedQuestIndex]
-    const currentTime = new Date(selectedQuest.countdown - this.state.curTime);
-    const rewardList = focusedQuest.rewards.map(reward => (
-      <Text style={styles.focusedText}> { reward } </Text>
+    const currentSeconds = (selectedQuest.countdown - this.state.curTime)/1000;
+    const days = Math.floor(currentSeconds/24/60/60);
+    const hoursLeft   = Math.floor((currentSeconds) - (days*86400));
+    const hours       = Math.floor(hoursLeft/3600);
+    const minutesLeft = Math.floor((hoursLeft) - (hours*3600));
+    const minutes     = Math.floor(minutesLeft/60);
+    const remainingSeconds = parseInt(currentSeconds % 60, 10);
+    const rewardList = focusedQuest.rewards.map((reward, i) => (
+      <Text style={styles.focusedText} key={i}> { reward } </Text>
     ));
 
     return (
@@ -165,12 +171,7 @@ class HomeScreen extends Component {
           <View style={styles.content}>
             <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
             <Text style={styles.locationText}>{ selectedQuest.place }</Text>
-            <Text style={styles.locationText}>{ currentTime.getHours() > 0 && currentTime.getHours()} h {currentTime.getMinutes()} m {currentTime.getSeconds()} s</Text>
-            <Button style={styles.button} overrides={true} fontSize={24} color={'white'} title={"Go to quest >"}
-              style={{ marginTop: 10 }}
-              onPress={() => this.props.navigation.navigate("QuestScreen")}>
-
-            </Button>
+            <Text style={styles.locationText}>{ days} D { hours } H { minutes } M { remainingSeconds } S</Text>
           </View>
         </ScrollView>
           <View>
