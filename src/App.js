@@ -18,6 +18,10 @@ import { StackNavigator } from 'react-navigation';
 import QuestScreen from './components/HomeScreen/QuestScreen'
 import SuccessScreen from './components/HomeScreen/SuccessScreen'
 import FailedScreen from './components/HomeScreen/FailedScreen'
+import CreateScreen from './components/HomeScreen/CreateScreen'
+import FindScreen from './components/HomeScreen/FindScreen'
+import ReputationScreen from './components/HomeScreen/ReputationScreen'
+import SettingsScreen from './components/HomeScreen/SettingsScreen'
 
 export default class App extends Component<{}> {
 
@@ -46,7 +50,11 @@ const RootNavigator = StackNavigator(
     HomeScreen: { screen: HomeScreen },
     QuestScreen: { screen: QuestScreen},
     SuccessScreen: {screen: SuccessScreen},
-    FailedScreen: {screen: FailedScreen}
+    FailedScreen: {screen: FailedScreen},
+    CreateScreen: {screen: CreateScreen},
+    FindScreen: {screen: FindScreen},
+    ReputationScreen: {screen: ReputationScreen},
+    SettingsScreen: {screen: SettingsScreen}
   },
   { headerMode: 'modal' }
 );

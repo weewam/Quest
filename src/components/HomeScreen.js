@@ -37,7 +37,7 @@ import Swiper from '../reducers/swiper';
 //Components
 import Background from '../components/Backgrounds/Background1'
 import SliderItem from './HomeScreen/SliderItem';
-
+import FunctionList from './HomeScreen/FunctionList';
 
 //Contants
 const WIDTH = Dimensions.get('window').width,
@@ -219,14 +219,7 @@ class HomeScreen extends Component {
             </ScrollView>
 
               <View>
-              <TouchableHighlight>
-                <Text style={styles.buttonText}>Profile</Text>
-              </TouchableHighlight>
-                <Text style={styles.buttonText}>Store</Text>
-                <Text style={styles.buttonText}>Create a Quest</Text>
-                <Text style={styles.buttonText}>Find a secret Quest</Text>
-                <Text style={styles.buttonText}>Reputation</Text>
-                <Text style={styles.buttonText}>Settings</Text>
+                <FunctionList navigator={this.props.navigation}/>
               </View>
 
 
@@ -281,14 +274,6 @@ const styles = StyleSheet.create({
   scrollView: {
     paddingBottom: 80,
     paddingTop:0,
-  },
-  buttonText: {
-    fontSize: 20,
-    color: 'white',
-    flexDirection: 'row',
-    height: 50,
-    textAlign: 'center',
-    justifyContent: 'center'
   }
 });
 
