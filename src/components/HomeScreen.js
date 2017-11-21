@@ -158,8 +158,13 @@ class HomeScreen extends Component {
     const showHours = hours < 10? "0"+hours : hours;
     const showMins = minutes < 10? "0"+minutes : minutes;
     const showSecs = remainingSeconds < 10? "0"+remainingSeconds : remainingSeconds;
+    //Image source={{ uri: reward[0]}} style={styles.iconImage}/>
+
     const rewardList = focusedQuest.rewards.map((reward, i) => (
-      <Text style={styles.focusedText} key={i}> { reward } </Text>
+      <View style={styles.iconView} key={i}>
+        <Image source={{ uri: "https://png.icons8.com/paper-money/win8/1600"}} style={styles.iconImage}/>
+        <Text style={styles.rewardText}> { reward[1] } </Text>
+      </View>
     ));
 
     return (
@@ -175,7 +180,7 @@ class HomeScreen extends Component {
                 <Text style={styles.locationText}>{ selectedQuest.place }</Text>
                 <Text style={styles.locationText}>{ showDays } D { showHours } H { showMins } M { showSecs } S</Text>
               </View>
-              <View style={styles.content}>
+              <View style={styles.rewardView}>
                 {rewardList}
               </View>
             </Swiper>
@@ -275,6 +280,26 @@ const styles = StyleSheet.create({
   scrollView: {
     paddingBottom: 80,
     paddingTop:0,
+  },
+  rewardView: {
+    flex: 2,
+    justifyContent: 'center',
+    marginLeft: 80,
+    marginBottom: 30,
+  },
+  rewardText: {
+    fontSize: 18,
+    fontWeight: '500',
+    marginBottom: 10,
+    color: 'white',
+  },
+  iconImage: {
+    width: 30,
+    height: 15,
+    marginRight: 20
+  },
+  iconView: {
+    flexDirection: 'row',
   }
 });
 
