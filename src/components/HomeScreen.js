@@ -154,6 +154,10 @@ class HomeScreen extends Component {
     const minutesLeft = Math.floor((hoursLeft) - (hours*3600));
     const minutes     = Math.floor(minutesLeft/60);
     const remainingSeconds = parseInt(currentSeconds % 60, 10);
+    const showDays = days < 10? "0"+days : days;
+    const showHours = hours < 10? "0"+hours : hours;
+    const showMins = minutes < 10? "0"+minutes : minutes;
+    const showSecs = remainingSeconds < 10? "0"+remainingSeconds : remainingSeconds;
     const rewardList = focusedQuest.rewards.map((reward, i) => (
       <Text style={styles.focusedText} key={i}> { reward } </Text>
     ));
@@ -169,20 +173,17 @@ class HomeScreen extends Component {
               <View style={styles.content}>
                 <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
                 <Text style={styles.locationText}>{ selectedQuest.place }</Text>
-                <Text style={styles.locationText}>{ days} D { hours } H { minutes } M { remainingSeconds } S</Text>
+                <Text style={styles.locationText}>{ showDays } D { showHours } H { showMins } M { showSecs } S</Text>
               </View>
               <View style={styles.content}>
                 {rewardList}
               </View>
             </Swiper>
             <View>
-
                 <View  ref={ () => this.focusedQuestView } style={styles.content}>
                   <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
                   <Text style={styles.focusedText}> { focusedQuest.name} </Text>
                 </View>
-
-
               <View style={styles.scrollView}>
                 <ScrollView
                   ref={ (list) => this.questScroll = list }
@@ -211,10 +212,10 @@ class HomeScreen extends Component {
             </View>
             <ScrollView style={styles.scrollView} horizontal={true}>
               <View>
-                <Text>1</Text>
+                <Text>Maybe we postpone the avatar room</Text>
               </View>
               <View>
-                <Text>2</Text>
+                <Text>Not implement this function on this stage</Text>
               </View>
             </ScrollView>
 
