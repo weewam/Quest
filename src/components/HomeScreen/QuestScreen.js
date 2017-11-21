@@ -96,7 +96,13 @@ class QuestScreen extends Component{
     }
 
     if (this.state.questScreenModal === "quiz") {
-      modal = <QuizModal lastQuestion={selectedQuestion[this.props.selectedQuestIndex] === (locations[this.props.selectedQuestIndex].questions.length-1)} selectedQuestion={locations[this.props.selectedQuestIndex].questions[this.props.selectedQuestion[this.props.selectedQuestIndex]]} callback={this.updateQuestion.bind(this)} closeModal={this.closeModal.bind(this)}/>
+      modal = 
+      <QuizModal 
+      lastQuestion={selectedQuestion[this.props.selectedQuestIndex] === (locations[this.props.selectedQuestIndex].questions.length-1)} 
+      selectedQuestion={locations[this.props.selectedQuestIndex].questions[this.props.selectedQuestion[this.props.selectedQuestIndex]]} 
+      callback={this.updateQuestion.bind(this)} 
+      closeModal={this.closeModal.bind(this)}
+      />
     }
 
     return (

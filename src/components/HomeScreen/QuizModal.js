@@ -14,10 +14,17 @@ import { StackNavigator } from 'react-navigation';
 class QuizModal extends Component{
   constructor(props) {
       super(props)
+      this.state = { 
+        selectedAnswer: false,
+      };
   }
 
   onPress() {
     this.props.callback();
+    this.setState({selectedAnswer: false});
+  }
+  selectAnswer(guess) {
+    this.setState({ selectedAnswer: guess });
   }
   finishQuest() {
     this.props.closeModal()
@@ -29,7 +36,11 @@ class QuizModal extends Component{
     const answerList = selectedQuestion[1].map(
           function (item, i) {
             return (
-                <Text key={i} style={styles.answerItemText}>{ `${i+1}. ${item} \n`}</Text>
+              <TouchableHighlight key={i} underlayColor='rgba(0, 0, 0, 0)' onPress={ this.selectAnswer.bind(this, i) }>
+                <View>
+                  <Text style={(this.state.selectedAnswer === i) ? styles.answerItemTextSelected : styles.answerItemText}>{ `${i+1}. ${item} \n`}</Text>
+                </View>
+              </TouchableHighlight>
             )
     }.bind(this))
     const nextButton = (
@@ -117,7 +128,21 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 16,
     color: 'white',
-    marginTop: 10,
+    borderWidth: 2,
+    borderRadius: 5,
+    borderColor: 'transparent',
+    paddingTop: 10,
+    paddingLeft: 10,
+  },
+  answerItemTextSelected: {
+    fontWeight: '500',
+    fontSize: 16,
+    color: 'white',
+    borderWidth: 2,
+    borderRadius: 5,
+    borderColor: 'white',
+    paddingTop: 10,
+    paddingLeft: 10,
   },
   buttonStyle: {
     fontSize: 18,
