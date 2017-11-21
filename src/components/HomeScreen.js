@@ -14,7 +14,7 @@ import {
   Dimensions,
   Button,
   Integer,
-  PermissionsAndroid
+  PermissionsAndroid,
 } from 'react-native';
 
 import { distanceFromPhone } from '../MapUtils'
@@ -32,6 +32,7 @@ import {
   setQuest,
   setFocusedQuest
 } from '../reducers/quests';
+import Swiper from '../reducers/swiper';
 
 //Components
 import Background from '../components/Backgrounds/Background1'
@@ -67,10 +68,15 @@ class HomeScreen extends Component {
   }
 
   updateSelectedQuest(i, pos) {
-    const { setQuest } = this.props;
+    const { setQuest, navigation, selectedQuestIndex } = this.props;
+    const selectedQuest = locations[i];
 
-    this.questScroll.scrollTo({ x: pos, animated: true })
-    setQuest(i);
+    if ((selectedQuestIndex === i) && selectedQuest.playable) {
+      navigation.navigate("QuestScreen")
+    } else {
+      this.questScroll.scrollTo({ x: pos, animated: true })
+      setQuest(i);
+    }
   }
 
   async componentDidMount() {
@@ -141,56 +147,91 @@ class HomeScreen extends Component {
 
     const selectedQuest = locations[selectedQuestIndex];
     const focusedQuest = locations[focusedQuestIndex]
-    const currentTime = new Date(selectedQuest.countdown - this.state.curTime);
-
+    const currentSeconds = (selectedQuest.countdown - this.state.curTime)/1000;
+    const days = Math.floor(currentSeconds/24/60/60);
+    const hoursLeft   = Math.floor((currentSeconds) - (days*86400));
+    const hours       = Math.floor(hoursLeft/3600);
+    const minutesLeft = Math.floor((hoursLeft) - (hours*3600));
+    const minutes     = Math.floor(minutesLeft/60);
+    const remainingSeconds = parseInt(currentSeconds % 60, 10);
+    const rewardList = focusedQuest.rewards.map((reward, i) => (
+      <Text style={styles.focusedText} key={i}> { reward } </Text>
+    ));
 
     return (
       <View style={styles.outerContainer}>
         <View style={styles.background}>
           <Background width={WIDTH + 10} />
         </View>
-
+        <ScrollView >
         <View style={styles.innerContainer}>
+            <Swiper>
+              <View style={styles.content}>
+                <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
+                <Text style={styles.locationText}>{ selectedQuest.place }</Text>
+                <Text style={styles.locationText}>{ days} D { hours } H { minutes } M { remainingSeconds } S</Text>
+              </View>
+              <View style={styles.content}>
+                {rewardList}
+              </View>
+            </Swiper>
+            <View>
 
-          <View style={styles.content}>
-            <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
-            <Text style={styles.locationText}>{ selectedQuest.place }</Text>
-            <Text style={styles.locationText}>{ currentTime.getHours() > 0 && currentTime.getHours()} h {currentTime.getMinutes()} m {currentTime.getSeconds()} s</Text>
-            <Button style={styles.button} overrides={true} fontSize={24} color={'white'} title={"Go to quest >"}
-              style={{ marginTop: 10 }}
-              onPress={() => this.props.navigation.navigate("QuestScreen")}>
+                <View  ref={ () => this.focusedQuestView } style={styles.content}>
+                  <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
+                  <Text style={styles.focusedText}> { focusedQuest.name} </Text>
+                </View>
 
-            </Button>
-          </View>
 
-          <View>
-            <View  ref={ () => this.focusedQuestView } style={styles.content}>
-              <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
-              <Text style={styles.focusedText}> { focusedQuest.name} </Text>
+              <View style={styles.scrollView}>
+                <ScrollView
+                  ref={ (list) => this.questScroll = list }
+
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={ false }
+
+                  onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
+
+                  decelerationRate={ 'fast' }
+
+                  snapToAlignment={ 'center' }
+                  snapToInterval={ buttonWidth + itemSpacing }
+
+                  contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
+                  contentOffset={{ x : -initScrollPosition }}
+                >
+                  { loctionList }
+                </ScrollView>
+              </View>
             </View>
-
-            <View style={styles.scrollView}>
-              <ScrollView
-                ref={ (list) => this.questScroll = list }
-
-                horizontal={true}
-                showsHorizontalScrollIndicator={ false }
-
-                onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
-
-                decelerationRate={ 'fast' }
-
-                snapToAlignment={ 'center' }
-                snapToInterval={ buttonWidth + itemSpacing }
-
-                contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
-                contentOffset={{ x : -initScrollPosition }}
-              >
-                { loctionList }
-              </ScrollView>
-            </View>
-          </View>
         </View>
+        <View style={styles.innerContainer}>
+            <View style={styles.content}>
+              <Text>User Name</Text>
+            </View>
+            <ScrollView style={styles.scrollView} horizontal={true}>
+              <View>
+                <Text>1</Text>
+              </View>
+              <View>
+                <Text>2</Text>
+              </View>
+            </ScrollView>
+
+              <View>
+              <TouchableHighlight>
+                <Text style={styles.buttonText}>Profile</Text>
+              </TouchableHighlight>
+                <Text style={styles.buttonText}>Store</Text>
+                <Text style={styles.buttonText}>Create a Quest</Text>
+                <Text style={styles.buttonText}>Find a secret Quest</Text>
+                <Text style={styles.buttonText}>Reputation</Text>
+                <Text style={styles.buttonText}>Settings</Text>
+              </View>
+
+
+        </View>
+        </ScrollView>
       </View>
     );
   }
@@ -212,6 +253,8 @@ const styles = StyleSheet.create({
 
   innerContainer: {
     flex: 1,
+    width: WIDTH,
+    height: HEIGHT
   },
 
   content: {
@@ -238,6 +281,14 @@ const styles = StyleSheet.create({
   scrollView: {
     paddingBottom: 80,
     paddingTop:0,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: 'white',
+    flexDirection: 'row',
+    height: 50,
+    textAlign: 'center',
+    justifyContent: 'center'
   }
 });
 
