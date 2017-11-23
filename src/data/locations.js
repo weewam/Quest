@@ -44,6 +44,12 @@ export const locations = [
 		coords: { lat: 59.325312, long: 18.066684 },
 		playable: 1,
 		about: "Ta chansen och upplev Stockholm från takåsarna på guidade turer, väl förankrad i säkerhetssystem. En unik kombination av klättring och sightseeing för dig som inte är höjdrädd.",
+		questions:
+		[
+			["Karlsson på taket spelades in i Stockholm, frågan är i vilken stadsdel?",["Vasastan","Södermalm", "Gärdet", "Solna"], 0],
+			["Vilken är Stockholms högsta byggnad",["Skrapan på södermalm","Kaknästornet", "Vattentornet i liljeholmen"], 1],
+			["Från vilket århundrade är de flesta av byggnaderna i gamla stan?",["1400", "1500","1600", "1700", "1800", "1900", "2000"], 4],
+		],
 		rewards: [],
 
 	},
