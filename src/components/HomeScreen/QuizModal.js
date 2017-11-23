@@ -20,15 +20,31 @@ class QuizModal extends Component{
   }
 
   onPress() {
-    this.props.callback();
-    this.setState({selectedAnswer: false});
+    //alert("selectedAnswer: " + this.state.selectedAnswer + "\n" +
+    //      "CorrectAnswer: " + this.props.selectedQuestion[2] + "\n" + 
+    //      "Correct answer: " + (this.state.selectedAnswer === this.props.selectedQuestion[2]))
+    if(this.state.selectedAnswer !== false) {
+      this.props.callback((this.state.selectedAnswer === this.props.selectedQuestion[2]));
+      this.setState({selectedAnswer: false});
+    } else {
+      alert("Select an answer")
+    }
+
   }
   selectAnswer(guess) {
     this.setState({ selectedAnswer: guess });
   }
   finishQuest() {
-    this.props.closeModal()
+    if(this.state.selectedAnswer !== false && (this.state.selectedAnswer === this.props.selectedQuestion[2])) {
+      this.props.finishQuest(true)
+    } else if(this.state.selectedAnswer !== false) {
+      this.props.finishQuest(false)
+    } 
+    else {
+      alert("Select an answer")
+    }
   }
+
 
   render() {
     const {selectedQuestion, lastQuestion} = this.props;
@@ -50,7 +66,8 @@ class QuizModal extends Component{
             <Text style={styles.buttonStyle}>Next Question</Text>
           </View>
         </TouchableHighlight>
-      </View>)
+      </View>
+      )
 
     const finishButton = (
       <View>
@@ -59,7 +76,8 @@ class QuizModal extends Component{
             <Text style={styles.buttonStyle}>Finish</Text>
           </View>
         </TouchableHighlight>
-        </View>)
+        </View>
+        )
 
     return(
       <View style={styles.quizContainer}>

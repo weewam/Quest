@@ -21,12 +21,19 @@ export const quests = (state = initialState, action) => {
 				...state,
 				focusedQuest : action.selectedId
 			};
-		case 'NEXT_QUESTION':
+		case 'SET_NEXT_QUESTION': 
 			let newSelectedQuestion = state.selectedQuestion.slice();
-			newSelectedQuestion[state.selectedQuest]++;
+			newSelectedQuestion[state.selectedQuest] = action.nextQuestionId;
 			return {
 				...state,
 				selectedQuestion : newSelectedQuestion,
+			};
+		case 'NEXT_QUESTION':
+			let updatedSelectedQuestion = state.selectedQuestion.slice();
+			updatedSelectedQuestion[state.selectedQuest]++;
+			return {
+				...state,
+				selectedQuestion : updatedSelectedQuestion,
 			};
 		default:
 			return state;
@@ -51,7 +58,14 @@ export const setFocusedQuest = (selectQuest) => {
 		})
 	}
 }
-
+export const setNextQuestion = (nextQuestion) => {
+	return dispatch => {
+		dispatch({
+			type: 'SET_NEXT_QUESTION',
+			nextQuestionId: nextQuestion
+		})
+	}
+}
 export const nextQuestion = () => {
 
 	return dispatch => {

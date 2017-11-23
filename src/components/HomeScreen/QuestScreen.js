@@ -24,6 +24,7 @@ import {
   setQuest,
   setFocusedQuest,
   nextQuestion,
+  setNextQuestion,
 } from '../../reducers/quests';
 
 
@@ -47,6 +48,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   setQuest,
   setFocusedQuest,
   nextQuestion,
+  setNextQuestion,
 }, dispatch)
 
 class QuestScreen extends Component{
@@ -77,13 +79,28 @@ class QuestScreen extends Component{
         )
     }
 
-    updateQuestion(){
-      this.props.nextQuestion()
+    updateQuestion(correctAnswer){
+      if(correctAnswer) {
+        this.props.nextQuestion()
+      } else{
+        this.setModalVisible(!this.state.modalVisible)
+        this.props.navigation.navigate("FailedScreen")
+        this.props.setNextQuestion(0)
+      }
     }
 
-    closeModal() {
+    
+    finishQuest(success) {
       this.setModalVisible(!this.state.modalVisible)
+      if(success) {
+        this.props.navigation.navigate("SuccessScreen")
+      } else {
+        this.props.navigation.navigate("FailedScreen")
+      }
+      this.props.setNextQuestion(0)
+
     }
+
 
    render() {
     const { selectedQuestIndex, currentPosition, selectedQuestion } = this.props
@@ -101,7 +118,7 @@ class QuestScreen extends Component{
       lastQuestion={selectedQuestion[this.props.selectedQuestIndex] === (locations[this.props.selectedQuestIndex].questions.length-1)} 
       selectedQuestion={locations[this.props.selectedQuestIndex].questions[this.props.selectedQuestion[this.props.selectedQuestIndex]]} 
       callback={this.updateQuestion.bind(this)} 
-      closeModal={this.closeModal.bind(this)}
+      finishQuest={this.finishQuest.bind(this)}
       />
     }
 
