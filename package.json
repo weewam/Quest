@@ -12,6 +12,7 @@
     "react": "16.0.0",
     "react-native": "0.50.3",
     "react-native-elements": "^0.18.2",
+    "react-native-geocoding": "^0.2.0",
     "react-native-horizontal-picker": "0.0.1",
     "react-native-hpicker": "^1.0.5",
     "react-native-picker-scrollview": "^0.1.0",
