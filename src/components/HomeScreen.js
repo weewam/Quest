@@ -87,19 +87,21 @@ class HomeScreen extends Component {
   }
 
   async componentDidMount() {
-    Geocoder.setApiKey('AIzaSyA0d3gB_dXyNRkhG7HtwzAKSWHidVFexOA');
-    const geoLocationResult = Geocoder.getFromLatLng(59.321841, 17.839746).then(
-      json => {
-        var address_component = json.results[0].address_components[0];
-        //alert(address_component.long_name);
-        this.setState({
-          geoLocation: address_component.long_name,
-        })
-      },
-      error => {
-        //alert(error);
-      }
-    );
+    setInterval( () => {
+      Geocoder.setApiKey('AIzaSyA0d3gB_dXyNRkhG7HtwzAKSWHidVFexOA');
+      const geoLocationResult = Geocoder.getFromLatLng(parseFloat(this.props.currentPosition.lat), parseFloat(this.props.currentPosition.long)).then(
+        json => {
+          var address_component = json.results[0].address_components[1];
+          //alert(address_component.long_name);
+          this.setState({
+            geoLocation: address_component.long_name,
+          })
+        },
+        error => {
+          //alert(error);
+        }
+      );
+    },1000)
 
     setInterval( () => {
       this.setState({
@@ -156,33 +158,11 @@ class HomeScreen extends Component {
     setFocusedQuest(index)
    }
 
-   reverseGeoLocation(coords) {
-
-    let params = {
-      key: 'AIzaSyA0d3gB_dXyNRkhG7HtwzAKSWHidVFexOA',
-      latlng: `${coords.lat},${coords.long}`,
-    };
-    let qs = JSON.stringify(params);
-
-    return fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?${qs}`)
-        .then((res) => res.json())
-        .then((json) => {
-          if (json.status !== 'OK') {
-            throw new Error(`Geocode error: ${json.status}`);
-          }
-          return json;
-        });
-   }
-
-
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchId);
   }
 
   render() {
-
-
     const { focusedQuestIndex } = this.props
 
     const { selectedQuestIndex, currentPosition } = this.props
@@ -194,9 +174,6 @@ class HomeScreen extends Component {
           itemSpacing={itemSpacing} callback={this.updateSelectedQuest.bind(this, i, pos)} phoneLocation={currentPosition} />
       )
     }.bind(this))
-    
-
-    
 
     const geoLocationComponent =  (
       <Text style={styles.topBarText}> {this.state.geoLocation} </Text>
