@@ -14,17 +14,24 @@ import { StackNavigator } from 'react-navigation';
 class QuizModal extends Component{
   constructor(props) {
       super(props)
-      this.state = { 
+      this.state = {
         selectedAnswer: false,
+        selectedOptions: [],
+        score: 3
       };
   }
 
   onPress() {
     //alert("selectedAnswer: " + this.state.selectedAnswer + "\n" +
-    //      "CorrectAnswer: " + this.props.selectedQuestion[2] + "\n" + 
+    //      "CorrectAnswer: " + this.props.selectedQuestion[2] + "\n" +
     //      "Correct answer: " + (this.state.selectedAnswer === this.props.selectedQuestion[2]))
     if(this.state.selectedAnswer !== false) {
-      this.props.callback((this.state.selectedAnswer === this.props.selectedQuestion[2]));
+      if(this.state.selectedAnswer === this.props.selectedQuestion[2]){
+        this.props.callback((this.state.selectedAnswer === this.props.selectedQuestion[2]));
+      } else{
+        this.setState({selectedOptions:[...this.state.selectedOptions, this.state.selectedAnswer]});
+        this.state.score -= 1
+      }
       this.setState({selectedAnswer: false});
     } else {
       alert("Select an answer")
@@ -39,7 +46,7 @@ class QuizModal extends Component{
       this.props.finishQuest(true)
     } else if(this.state.selectedAnswer !== false) {
       this.props.finishQuest(false)
-    } 
+    }
     else {
       alert("Select an answer")
     }
@@ -48,11 +55,11 @@ class QuizModal extends Component{
 
   render() {
     const {selectedQuestion, lastQuestion} = this.props;
-
+    //console.log("selectedQuestion:", selectedQuestion, "selectedAnswer:", this.state.selectedAnswer)
     const answerList = selectedQuestion[1].map(
           function (item, i) {
             return (
-              <TouchableHighlight key={i} underlayColor='rgba(0, 0, 0, 0)' onPress={ this.selectAnswer.bind(this, i) }>
+              <TouchableHighlight key={i} underlayColor='rgba(0, 0, 0, 0)' onPress={ this.selectAnswer.bind(this, i)} disabled={this.state.selectedOptions.indexOf(i) !== -1} >
                 <View>
                   <Text style={(this.state.selectedAnswer === i) ? styles.answerItemTextSelected : styles.answerItemText}>{ `${i+1}. ${item} \n`}</Text>
                 </View>
@@ -85,9 +92,9 @@ class QuizModal extends Component{
           <Text style={styles.questionText}>
             {selectedQuestion[0] + "\n"}
           </Text>
-          
+
             {answerList}
-          
+
         </View>
         {(lastQuestion) ? finishButton : nextButton}
       </View>

@@ -17,6 +17,8 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 
+import Geocoder from 'react-native-geocoding';
+
 import { distanceFromPhone } from '../MapUtils'
 import { StackNavigator } from 'react-navigation';
 
@@ -68,6 +70,7 @@ class HomeScreen extends Component {
       longitude: 18.076914,
       coords: { lat: 59.333184, long: 18.076914 },
       error: null,
+      geoLocation: "",
     }
   }
 
@@ -84,6 +87,21 @@ class HomeScreen extends Component {
   }
 
   async componentDidMount() {
+    setInterval( () => {
+      Geocoder.setApiKey('AIzaSyA0d3gB_dXyNRkhG7HtwzAKSWHidVFexOA');
+      const geoLocationResult = Geocoder.getFromLatLng(parseFloat(this.props.currentPosition.lat), parseFloat(this.props.currentPosition.long)).then(
+        json => {
+          var address_component = json.results[0].address_components[1];
+          //alert(address_component.long_name);
+          this.setState({
+            geoLocation: address_component.long_name,
+          })
+        },
+        error => {
+          //alert(error);
+        }
+      );
+    },1000)
 
     setInterval( () => {
       this.setState({
@@ -149,7 +167,6 @@ class HomeScreen extends Component {
   }
 
   render() {
-
     const { focusedQuestIndex } = this.props
 
     const { selectedQuestIndex, currentPosition } = this.props
@@ -161,6 +178,10 @@ class HomeScreen extends Component {
           itemSpacing={itemSpacing} callback={this.updateSelectedQuest.bind(this, i, pos)} phoneLocation={currentPosition} />
       )
     }.bind(this))
+
+    const geoLocationComponent =  (
+      <Text style={styles.topBarText}> {this.state.geoLocation} </Text>
+    )
 
     const selectedQuest = locations[selectedQuestIndex];
     const focusedQuest = locations[0]
@@ -189,8 +210,13 @@ class HomeScreen extends Component {
         <View style={styles.background}>
           <Background width={WIDTH + 10} />
         </View>
-        <ScrollView >
-        <View style={styles.innerContainer}>
+        
+        <ScrollView snapToInterval={HEIGHT} decelerationRate={ 'fast' } showsVerticalScrollIndicator={ false }> 
+          <View style={styles.topBarContainer}>
+            { geoLocationComponent }
+          </View>
+
+          <View style={styles.innerContainer}>
             <Swiper>
               <View style={styles.content}>
                 <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
@@ -201,11 +227,12 @@ class HomeScreen extends Component {
                 {rewardList}
               </View>
             </Swiper>
+
             <View>
-                <View  ref={ () => this.focusedQuestView } style={styles.content}>
-                  <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
-                  <Text style={styles.focusedText}> { focusedQuest.name} </Text>
-                </View>
+              <View  ref={ () => this.focusedQuestView } style={styles.content}>
+                <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
+                <Text style={styles.focusedText}> { focusedQuest.name} </Text>
+              </View>
               <View style={styles.scrollView}>
                 <ScrollView
                   ref={ (list) => this.questScroll = list }
@@ -219,15 +246,15 @@ class HomeScreen extends Component {
 
                   snapToAlignment={ 'center' }
                   snapToInterval={ buttonWidth + itemSpacing }
-
                   contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
-                >
+                  contentOffset={{ x : -initScrollPosition }}>
                   { loctionList }
                 </ScrollView>
               </View>
             </View>
-        </View>
-        <View style={styles.innerContainer}>
+          </View>
+
+          <View style={styles.innerContainer}>
             <View style={styles.content}>
               <Text>User Name</Text>
             </View>
@@ -240,12 +267,10 @@ class HomeScreen extends Component {
               </View>
             </ScrollView>
 
-              <View>
+            <View>
                 <FunctionList navigator={this.props.navigation}/>
-              </View>
-
-
-        </View>
+            </View>
+          </View>
         </ScrollView>
       </View>
     );
@@ -259,7 +284,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgb(215, 150, 140)',
   },
-
+  topBarContainer: {
+    height: HEIGHT*0.075,
+    backgroundColor: 'rgb(245, 150, 140)',
+    paddingTop: 20,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+  },
+  topBarText: {
+    marginTop: 20,
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '500',
+    marginRight: 2,
+    marginBottom: 8,
+  },
   background: {
     position: 'absolute',
     bottom : 0,
