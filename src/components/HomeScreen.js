@@ -131,6 +131,10 @@ class HomeScreen extends Component {
       (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
     );
+
+    
+    const { selectedQuestIndex } = this.props
+    this.questScroll.scrollTo({ x: -initScrollPosition + selectedQuestIndex * (buttonWidth + itemSpacing), animated: true })
   }
 
    updateSelectedQuestOnMomentumEnds(event: Object) {
@@ -159,7 +163,7 @@ class HomeScreen extends Component {
     }.bind(this))
 
     const selectedQuest = locations[selectedQuestIndex];
-    const focusedQuest = locations[focusedQuestIndex]
+    const focusedQuest = locations[0]
     const currentSeconds = (selectedQuest.countdown - this.state.curTime)/1000;
     const days = Math.floor(currentSeconds/24/60/60);
     const hoursLeft   = Math.floor((currentSeconds) - (days*86400));
@@ -217,7 +221,6 @@ class HomeScreen extends Component {
                   snapToInterval={ buttonWidth + itemSpacing }
 
                   contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
-                  contentOffset={{ x : -initScrollPosition + selectedQuestIndex * (buttonWidth + itemSpacing) }}
                 >
                   { loctionList }
                 </ScrollView>
