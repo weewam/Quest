@@ -11,10 +11,15 @@ import {
   View,
   Button
 } from 'react-native';
-import { Provider , connect} from 'react-redux';
-import store from './Store';
-import HomeScreen from './components/HomeScreen';
+
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/es/integration/react'
+
+import configureStore from './Store';
+
 import { StackNavigator } from 'react-navigation';
+
+import HomeScreen from './components/HomeScreen';
 import QuestScreen from './components/HomeScreen/QuestScreen'
 import SuccessScreen from './components/HomeScreen/SuccessScreen'
 import FailedScreen from './components/HomeScreen/FailedScreen'
@@ -23,14 +28,19 @@ import FindScreen from './components/HomeScreen/FindScreen'
 import ReputationScreen from './components/HomeScreen/ReputationScreen'
 import SettingsScreen from './components/HomeScreen/SettingsScreen'
 
+
+const { persistor, store } = configureStore()
+
 export default class App extends Component<{}> {
 
   render() {
     return (
       <Provider store={ store }>
-        <View style={ styles.container }>
-          <RootNavigator/>
-        </View>
+        <PersistGate persistor={ persistor }>
+          <View style={ styles.container }>
+            <RootNavigator/>
+          </View>
+        </PersistGate>
       </Provider>
     );
   }

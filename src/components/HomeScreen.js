@@ -217,7 +217,7 @@ class HomeScreen extends Component {
                   snapToInterval={ buttonWidth + itemSpacing }
 
                   contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
-                  contentOffset={{ x : -initScrollPosition }}
+                  contentOffset={{ x : -initScrollPosition + selectedQuestIndex * (buttonWidth + itemSpacing) }}
                 >
                   { loctionList }
                 </ScrollView>
