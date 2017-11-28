@@ -19,7 +19,9 @@ export const setPosition = (position) => {
     return dispatch => {
         dispatch({
             type: 'SET_POSITION',
-            coords: position.coords
+            coords: position.coords,
+            lat: position.coords.latitude,
+            long: position.coords.longitude,
         })
     }
 }

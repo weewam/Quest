@@ -63,7 +63,11 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      curTime : new Date().getTime()
+      curTime : new Date().getTime(),
+      latitude: 59.333184,
+      longitude: 18.076914,
+      coords: { lat: 59.333184, long: 18.076914 },
+      error: null,
     }
   }
 
@@ -86,6 +90,8 @@ class HomeScreen extends Component {
         curTime : new Date().getTime()
       })
     },1000)
+
+    /*
     console.log("Get permission")
     const { setPosition } = this.props
     try {
@@ -117,7 +123,14 @@ class HomeScreen extends Component {
       }
     } catch (err) {
       console.warn(err)
-    }
+    }*/
+    this.watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        this.props.setPosition(position)
+      },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
+    );
   }
 
    updateSelectedQuestOnMomentumEnds(event: Object) {

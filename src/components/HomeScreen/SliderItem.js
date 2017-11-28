@@ -37,9 +37,9 @@ export default class SliderItem extends Component {
   render() {
     let { itemDimension, itemSpacing, image, playable, selected, phoneLocation, eventLocation } = this.props;
     let { selectedAnim } = this.state;
-
+    
     let distance = Math.floor(distanceFromPhone(phoneLocation, eventLocation) * 10) / 10
-
+    
     let outerCircleDimension = itemDimension + 2 * (borderGap + borderWidth);
     let playableCircle = null;
 
