@@ -34,7 +34,6 @@ import {
   setQuest,
   setFocusedQuest
 } from '../reducers/quests';
-import Swiper from '../reducers/swiper';
 
 //Components
 import Background from '../components/Backgrounds/Background1'
@@ -184,7 +183,8 @@ class HomeScreen extends Component {
     )
 
     const selectedQuest = locations[selectedQuestIndex];
-    const focusedQuest = locations[0]
+    const focusedQuest = locations[focusedQuestIndex];
+
     const currentSeconds = (selectedQuest.countdown - this.state.curTime)/1000;
     const days = Math.floor(currentSeconds/24/60/60);
     const hoursLeft   = Math.floor((currentSeconds) - (days*86400));
@@ -196,68 +196,56 @@ class HomeScreen extends Component {
     const showHours = hours < 10? "0"+hours : hours;
     const showMins = minutes < 10? "0"+minutes : minutes;
     const showSecs = remainingSeconds < 10? "0"+remainingSeconds : remainingSeconds;
-    //Image source={{ uri: reward[0]}} style={styles.iconImage}/>
-
-    const rewardList = focusedQuest.rewards.map((reward, i) => (
-      <View style={styles.iconView} key={i}>
-        <Image source={{ uri: "https://png.icons8.com/paper-money/win8/1600"}} style={styles.iconImage}/>
-        <Text style={styles.rewardText}> { reward[1] } </Text>
-      </View>
-    ));
 
     return (
       <View style={styles.outerContainer}>
-        <View style={styles.background}>
-          <Background width={WIDTH + 10} />
-        </View>
         
-        <ScrollView snapToInterval={HEIGHT} decelerationRate={ 'fast' } showsVerticalScrollIndicator={ false }> 
-          <View style={styles.topBarContainer}>
-            { geoLocationComponent }
-          </View>
-
+        <ScrollView snapToInterval={HEIGHT} decelerationRate={ 'fast' } showsVerticalScrollIndicator={ false }>
           <View style={styles.innerContainer}>
-            <Swiper>
-              <View style={styles.content}>
-                <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
-                <Text style={styles.locationText}>{ selectedQuest.place }</Text>
-                <Text style={styles.locationText}>{ showDays } D { showHours } H { showMins } M { showSecs } S</Text>
-              </View>
-              <View style={styles.rewardView}>
-                {rewardList}
-              </View>
-            </Swiper>
+            <View style={styles.background}>
+              <Background width={WIDTH + 10} />
+            </View>
 
-            <View>
-              <View  ref={ () => this.focusedQuestView } style={styles.content}>
+            <View style={styles.topBarContainer}>
+              { geoLocationComponent }
+            </View>
+
+            <View style={styles.content}>
+              <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
+              <Text style={styles.locationText}>{ selectedQuest.place }</Text>
+              <Text style={styles.locationText}>{ showDays } D { showHours } H { showMins } M { showSecs } S</Text>
+            </View>
+
+            <View style={styles.sliderItemContainer}>
+              <View style={styles.focusedQuestContainer}>
                 <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
                 <Text style={styles.focusedText}> { focusedQuest.name} </Text>
               </View>
-              <View style={styles.scrollView}>
-                <ScrollView
-                  ref={ (list) => this.questScroll = list }
 
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={ false }
+              <ScrollView
+                ref={ (list) => this.questScroll = list }
 
-                  onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
+                horizontal={true}
+                showsHorizontalScrollIndicator={ false }
 
-                  decelerationRate={ 'fast' }
+                onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
 
-                  snapToAlignment={ 'center' }
-                  snapToInterval={ buttonWidth + itemSpacing }
-                  contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
-                  contentOffset={{ x : -initScrollPosition }}>
-                  { loctionList }
-                </ScrollView>
-              </View>
+                decelerationRate={ 'fast' }
+
+                snapToAlignment={ 'center' }
+                snapToInterval={ buttonWidth + itemSpacing }
+                contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
+                contentOffset={{ x : -initScrollPosition }}>
+                { loctionList }
+              </ScrollView>
             </View>
           </View>
 
           <View style={styles.innerContainer}>
-            <View style={styles.content}>
+            <View style={styles.topBarContainer}>
               <Text>User Name</Text>
             </View>
+
             <ScrollView style={styles.scrollView} horizontal={true}>
               <View>
                 <Text>Maybe we postpone the avatar room</Text>
@@ -284,25 +272,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgb(215, 150, 140)',
   },
-  topBarContainer: {
-    height: HEIGHT*0.075,
-    backgroundColor: 'rgb(245, 150, 140)',
-    paddingTop: 20,
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-  },
-  topBarText: {
-    marginTop: 20,
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '500',
-    marginRight: 2,
-    marginBottom: 8,
-  },
   background: {
     position: 'absolute',
     bottom : 0,
-    left : -10
+    left : -10,
+    borderBottomColor: '#EAE086',
+    borderBottomWidth: 10,
   },
 
   innerContainer: {
@@ -311,51 +286,48 @@ const styles = StyleSheet.create({
     height: HEIGHT
   },
 
-  content: {
-    flex: 2,
+  topBarContainer: {
+    flex: 0,
+    height: 80,
+    paddingTop: 15,
+    alignItems: 'flex-end',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 30,
+    borderBottomColor: '#EAE086',
+    borderBottomWidth: 5,
+  },
+  topBarText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '500',
+    textAlignVertical: 'center',
   },
   locationText: {
     fontSize: 24,
-    fontWeight: '500',
     color: 'white',
+    fontWeight: '500',
   },
-  button:  {
-    fontSize: 24,
-    fontWeight: '500',
-    color: 'white',
+
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+  },
+  
+  focusedQuestContainer: {
+    marginBottom: 30,
   },
   focusedText: {
     fontSize: 18,
     fontWeight: '500',
     color: 'white',
+    textAlign: 'center',
   },
-  scrollView: {
-    paddingBottom: 80,
-    paddingTop:0,
+  
+  sliderItemContainer: {
+    paddingBottom: 40,
+    backgroundColor: 'rgba(0, 0, 0, 0)',
   },
-  rewardView: {
-    flex: 2,
-    justifyContent: 'center',
-    marginLeft: 80,
-    marginBottom: 30,
-  },
-  rewardText: {
-    fontSize: 18,
-    fontWeight: '500',
-    marginBottom: 10,
-    color: 'white',
-  },
-  iconImage: {
-    width: 30,
-    height: 15,
-    marginRight: 20
-  },
-  iconView: {
-    flexDirection: 'row',
-  }
 });
 
 
