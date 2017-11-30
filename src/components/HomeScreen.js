@@ -40,6 +40,7 @@ import Swiper from '../reducers/swiper';
 import Background from '../components/Backgrounds/Background1'
 import SliderItem from './HomeScreen/SliderItem';
 import FunctionList from './HomeScreen/FunctionList';
+import Compass from './HomeScreen/Compass';
 
 //Contants
 const WIDTH = Dimensions.get('window').width,
@@ -65,7 +66,7 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      curTime : new Date().getTime(),
+      curTime: new Date().getTime(),
       latitude: 59.333184,
       longitude: 18.076914,
       coords: { lat: 59.333184, long: 18.076914 },
@@ -87,7 +88,7 @@ class HomeScreen extends Component {
   }
 
   async componentDidMount() {
-    setInterval( () => {
+    setInterval(() => {
       Geocoder.setApiKey('AIzaSyA0d3gB_dXyNRkhG7HtwzAKSWHidVFexOA');
       const geoLocationResult = Geocoder.getFromLatLng(parseFloat(this.props.currentPosition.lat), parseFloat(this.props.currentPosition.long)).then(
         json => {
@@ -101,47 +102,13 @@ class HomeScreen extends Component {
           //alert(error);
         }
       );
-    },1000)
+    }, 1000)
 
-    setInterval( () => {
+    setInterval(() => {
       this.setState({
-        curTime : new Date().getTime()
+        curTime: new Date().getTime()
       })
-    },1000)
-
-    /*
-    console.log("Get permission")
-    const { setPosition } = this.props
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          'title': 'Quest Permission',
-          'message': 'Quest App needs access to your location'
-        }
-      )
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("Permission granted")
-        navigator.geolocation.getCurrentPosition(
-          (position) => setPosition(position),
-          (error) => {
-            console.log(error)
-            this.setState({ error: error.message })
-          },
-          { enableHighAccuracy: true, timeout: 230 },
-        )
-        console.log("Got position")
-        this.watchId = navigator.geolocation.watchPosition(
-          (position) => setPosition(position),
-          (error) => this.setState({ error: error.message }),
-          { enableHighAccuracy: true, timeout: 60, maximumAge: 1000, distanceFilter: 10 },
-        )
-      } else {
-        console.log("Permission denied")
-      }
-    } catch (err) {
-      console.warn(err)
-    }*/
+    }, 1000)
     this.watchId = navigator.geolocation.watchPosition(
       (position) => {
         this.props.setPosition(position)
@@ -150,17 +117,17 @@ class HomeScreen extends Component {
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
     );
 
-    
+
     const { selectedQuestIndex } = this.props
     this.questScroll.scrollTo({ x: -initScrollPosition + selectedQuestIndex * (buttonWidth + itemSpacing), animated: true })
   }
 
-   updateSelectedQuestOnMomentumEnds(event: Object) {
+  updateSelectedQuestOnMomentumEnds(event: Object) {
     const { setFocusedQuest } = this.props
 
-    const index = Math.round((event.nativeEvent.contentOffset.x + initScrollPosition) /(buttonWidth+itemSpacing), 1.0)
+    const index = Math.round((event.nativeEvent.contentOffset.x + initScrollPosition) / (buttonWidth + itemSpacing), 1.0)
     setFocusedQuest(index)
-   }
+  }
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchId);
@@ -174,34 +141,34 @@ class HomeScreen extends Component {
     const loctionList = locations.map(function (item, i) {
       let pos = -initScrollPosition + i * (buttonWidth + itemSpacing);
       return (
-        <SliderItem key={i} {...item} selected={selectedQuestIndex === i}  focused={focusedQuestIndex === i} itemDimension={buttonWidth} eventLocation={item.coords}
+        <SliderItem key={i} {...item} selected={selectedQuestIndex === i} focused={focusedQuestIndex === i} itemDimension={buttonWidth} eventLocation={item.coords}
           itemSpacing={itemSpacing} callback={this.updateSelectedQuest.bind(this, i, pos)} phoneLocation={currentPosition} />
       )
     }.bind(this))
 
-    const geoLocationComponent =  (
+    const geoLocationComponent = (
       <Text style={styles.topBarText}> {this.state.geoLocation} </Text>
     )
 
     const selectedQuest = locations[selectedQuestIndex];
     const focusedQuest = locations[0]
-    const currentSeconds = (selectedQuest.countdown - this.state.curTime)/1000;
-    const days = Math.floor(currentSeconds/24/60/60);
-    const hoursLeft   = Math.floor((currentSeconds) - (days*86400));
-    const hours       = Math.floor(hoursLeft/3600);
-    const minutesLeft = Math.floor((hoursLeft) - (hours*3600));
-    const minutes     = Math.floor(minutesLeft/60);
+    const currentSeconds = (selectedQuest.countdown - this.state.curTime) / 1000;
+    const days = Math.floor(currentSeconds / 24 / 60 / 60);
+    const hoursLeft = Math.floor((currentSeconds) - (days * 86400));
+    const hours = Math.floor(hoursLeft / 3600);
+    const minutesLeft = Math.floor((hoursLeft) - (hours * 3600));
+    const minutes = Math.floor(minutesLeft / 60);
     const remainingSeconds = parseInt(currentSeconds % 60, 10);
-    const showDays = days < 10? "0"+days : days;
-    const showHours = hours < 10? "0"+hours : hours;
-    const showMins = minutes < 10? "0"+minutes : minutes;
-    const showSecs = remainingSeconds < 10? "0"+remainingSeconds : remainingSeconds;
+    const showDays = days < 10 ? "0" + days : days;
+    const showHours = hours < 10 ? "0" + hours : hours;
+    const showMins = minutes < 10 ? "0" + minutes : minutes;
+    const showSecs = remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds;
     //Image source={{ uri: reward[0]}} style={styles.iconImage}/>
 
     const rewardList = focusedQuest.rewards.map((reward, i) => (
       <View style={styles.iconView} key={i}>
-        <Image source={{ uri: "https://png.icons8.com/paper-money/win8/1600"}} style={styles.iconImage}/>
-        <Text style={styles.rewardText}> { reward[1] } </Text>
+        <Image source={{ uri: "https://png.icons8.com/paper-money/win8/1600" }} style={styles.iconImage} />
+        <Text style={styles.rewardText}> {reward[1]} </Text>
       </View>
     ));
 
@@ -210,18 +177,19 @@ class HomeScreen extends Component {
         <View style={styles.background}>
           <Background width={WIDTH + 10} />
         </View>
-        
-        <ScrollView snapToInterval={HEIGHT} decelerationRate={ 'fast' } showsVerticalScrollIndicator={ false }> 
+
+        <ScrollView snapToInterval={HEIGHT} decelerationRate={'fast'} showsVerticalScrollIndicator={false}>
           <View style={styles.topBarContainer}>
-            { geoLocationComponent }
+            {geoLocationComponent}
           </View>
 
+          <Compass />
           <View style={styles.innerContainer}>
             <Swiper>
               <View style={styles.content}>
-                <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
-                <Text style={styles.locationText}>{ selectedQuest.place }</Text>
-                <Text style={styles.locationText}>{ showDays } D { showHours } H { showMins } M { showSecs } S</Text>
+                <Text style={styles.locationText}>{(Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km"}</Text>
+                <Text style={styles.locationText}>{selectedQuest.place}</Text>
+                <Text style={styles.locationText}>{showDays} D {showHours} H {showMins} M {showSecs} S</Text>
               </View>
               <View style={styles.rewardView}>
                 {rewardList}
@@ -229,26 +197,26 @@ class HomeScreen extends Component {
             </Swiper>
 
             <View>
-              <View  ref={ () => this.focusedQuestView } style={styles.content}>
-                <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
-                <Text style={styles.focusedText}> { focusedQuest.name} </Text>
+              <View ref={() => this.focusedQuestView} style={styles.content}>
+                <Text style={styles.focusedText}> {focusedQuest.provider} </Text>
+                <Text style={styles.focusedText}> {focusedQuest.name} </Text>
               </View>
               <View style={styles.scrollView}>
                 <ScrollView
-                  ref={ (list) => this.questScroll = list }
+                  ref={(list) => this.questScroll = list}
 
                   horizontal={true}
-                  showsHorizontalScrollIndicator={ false }
+                  showsHorizontalScrollIndicator={false}
 
                   onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
 
-                  decelerationRate={ 'fast' }
+                  decelerationRate={'fast'}
 
-                  snapToAlignment={ 'center' }
-                  snapToInterval={ buttonWidth + itemSpacing }
+                  snapToAlignment={'center'}
+                  snapToInterval={buttonWidth + itemSpacing}
                   contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
-                  contentOffset={{ x : -initScrollPosition }}>
-                  { loctionList }
+                  contentOffset={{ x: -initScrollPosition }}>
+                  {loctionList}
                 </ScrollView>
               </View>
             </View>
@@ -268,7 +236,7 @@ class HomeScreen extends Component {
             </ScrollView>
 
             <View>
-                <FunctionList navigator={this.props.navigation}/>
+              <FunctionList navigator={this.props.navigation} />
             </View>
           </View>
         </ScrollView>
@@ -285,7 +253,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(215, 150, 140)',
   },
   topBarContainer: {
-    height: HEIGHT*0.075,
+    height: HEIGHT * 0.075,
     backgroundColor: 'rgb(245, 150, 140)',
     paddingTop: 20,
     justifyContent: 'flex-end',
@@ -301,14 +269,15 @@ const styles = StyleSheet.create({
   },
   background: {
     position: 'absolute',
-    bottom : 0,
-    left : -10
+    bottom: 0,
+    left: -10
   },
 
   innerContainer: {
     flex: 1,
     width: WIDTH,
-    height: HEIGHT
+    height: HEIGHT,
+    paddingTop: 0
   },
 
   content: {
@@ -322,7 +291,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: 'white',
   },
-  button:  {
+  button: {
     fontSize: 24,
     fontWeight: '500',
     color: 'white',
@@ -334,7 +303,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     paddingBottom: 80,
-    paddingTop:0,
+    paddingTop: 0,
   },
   rewardView: {
     flex: 2,
