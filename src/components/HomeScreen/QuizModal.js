@@ -17,8 +17,27 @@ class QuizModal extends Component{
       this.state = {
         selectedAnswer: false,
         selectedOptions: [],
-        score: 3
+        score: this.props.selectedQuestion[1].length
       };
+  }
+
+  resetState(){
+    this.setState({
+      selectedAnswer: false,
+      selectedOptions: [],
+      score: this.props.selectedQuestion[1].length
+    })
+  }
+
+  calScore(){
+    if(this.state.selectedAnswer === this.props.selectedQuestion[2]){
+      this.props.updateScore(this.state.score)
+      this.props.callback((this.state.selectedAnswer === this.props.selectedQuestion[2]));
+    } else{
+      this.setState({selectedOptions:[...this.state.selectedOptions, this.state.selectedAnswer]});
+      this.state.score -= 1
+    }
+    this.setState({selectedAnswer: false});
   }
 
   onPress() {
@@ -26,13 +45,7 @@ class QuizModal extends Component{
     //      "CorrectAnswer: " + this.props.selectedQuestion[2] + "\n" +
     //      "Correct answer: " + (this.state.selectedAnswer === this.props.selectedQuestion[2]))
     if(this.state.selectedAnswer !== false) {
-      if(this.state.selectedAnswer === this.props.selectedQuestion[2]){
-        this.props.callback((this.state.selectedAnswer === this.props.selectedQuestion[2]));
-      } else{
-        this.setState({selectedOptions:[...this.state.selectedOptions, this.state.selectedAnswer]});
-        this.state.score -= 1
-      }
-      this.setState({selectedAnswer: false});
+      this.calScore()
     } else {
       alert("Select an answer")
     }
@@ -43,9 +56,9 @@ class QuizModal extends Component{
   }
   finishQuest() {
     if(this.state.selectedAnswer !== false && (this.state.selectedAnswer === this.props.selectedQuestion[2])) {
-      this.props.finishQuest(true)
+      this.props.finishQuest(true, this.state.score)
     } else if(this.state.selectedAnswer !== false) {
-      this.props.finishQuest(false)
+      this.calScore()
     }
     else {
       alert("Select an answer")
@@ -55,12 +68,13 @@ class QuizModal extends Component{
 
   render() {
     const {selectedQuestion, lastQuestion} = this.props;
-    //console.log("selectedQuestion:", selectedQuestion, "selectedAnswer:", this.state.selectedAnswer)
     const answerList = selectedQuestion[1].map(
           function (item, i) {
             return (
-              <TouchableHighlight key={i} underlayColor='rgba(0, 0, 0, 0)' onPress={ this.selectAnswer.bind(this, i)} disabled={this.state.selectedOptions.indexOf(i) !== -1} >
-                <View>
+              <TouchableHighlight key={i} underlayColor='rgba(0, 0, 0, 0)'
+              onPress={ this.selectAnswer.bind(this, i)}
+              disabled={this.state.selectedOptions.indexOf(i) !== -1} >
+                <View style={{backgroundColor: this.state.selectedOptions.indexOf(i) !== -1 ? 'rgba(0,0,0,0.5)':'rgba(0,0,0,0)'}}>
                   <Text style={(this.state.selectedAnswer === i) ? styles.answerItemTextSelected : styles.answerItemText}>{ `${i+1}. ${item} \n`}</Text>
                 </View>
               </TouchableHighlight>
