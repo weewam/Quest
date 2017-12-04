@@ -23,7 +23,6 @@ import HomeScreen from './components/HomeScreen';
 import QuestScreen from './components/HomeScreen/QuestScreen'
 import SuccessScreen from './components/HomeScreen/SuccessScreen'
 import FailedScreen from './components/HomeScreen/FailedScreen'
-import FinishScreen from './components/HomeScreen/FinishScreen'
 import CreateScreen from './components/HomeScreen/CreateScreen'
 import FindScreen from './components/HomeScreen/FindScreen'
 import ReputationScreen from './components/HomeScreen/ReputationScreen'
@@ -66,7 +65,6 @@ const RootNavigator = StackNavigator(
     FindScreen: {screen: FindScreen},
     ReputationScreen: {screen: ReputationScreen},
     SettingsScreen: {screen: SettingsScreen},
-    FinishScreen: {screen: FinishScreen}
 
   },
   { headerMode: 'modal' }
