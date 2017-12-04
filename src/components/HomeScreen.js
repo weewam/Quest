@@ -34,7 +34,6 @@ import {
   setQuest,
   setFocusedQuest
 } from '../reducers/quests';
-import Swiper from '../reducers/swiper';
 import {
   updateFinalScore
 } from '../reducers/score'
@@ -60,7 +59,7 @@ const mapStateToProps = state => ({
   // todo: save scores and stars to memory
   currentScore: state.score.currentScore,
   currentStar: state.score.currentStar,
-  totalScore: state.score.totalScore
+  totalScore: state.score.totalScore,
   userName: state.user.name,
   userAvatar: state.user.avatar,
 })

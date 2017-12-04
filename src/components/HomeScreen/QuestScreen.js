@@ -103,6 +103,7 @@ class QuestScreen extends Component{
       this.setModalVisible(!this.state.modalVisible)
       this.updateCurrentScore(score)
       if(success) {
+        // console.log("updateFinalScore:", this.state.currentScore, this.state.maxScore)
         if(this.state.currentScore/this.state.maxScore >= 0.66){
           this.props.updateFinalScore(this.state.currentScore, "***")
         } else if(this.state.currentScore/this.state.maxScore < 0.33){

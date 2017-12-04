@@ -5,6 +5,7 @@ const initialState = {
 }
 
 export const score = (state = initialState, action) => {
+    // console.log("score:", state.totalScore, action.currentScore)
     switch (action.type) {
         case 'UPDATE_FINAL':
             return {
