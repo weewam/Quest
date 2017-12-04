@@ -19,18 +19,16 @@ class QuizModal extends Component{
         selectedOptions: [],
         score: this.props.selectedQuestion[1].length
       };
-      console.log("resetState:", this.props.selectedQuestion[1])
       this.props.updateMaxScore(this.props.selectedQuestion[1].length)
   }
 
-  resetState(){
+  resetState(potentialScore){
     this.setState({
       selectedAnswer: false,
       selectedOptions: [],
-      score: this.props.selectedQuestion[1].length
+      score: potentialScore
     })
-    console.log("resetState:", this.props.selectedQuestion[1])
-    this.props.updateMaxScore(this.props.selectedQuestion[1].length)
+    this.props.updateMaxScore(potentialScore)
   }
 
   calScore(){
