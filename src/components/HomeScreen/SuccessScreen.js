@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   StyleSheet,
   Text,
@@ -8,7 +10,21 @@ import {
 
 import { StackNavigator } from 'react-navigation';
 
+import {
+  updateFinalScore
+} from '../../reducers/score'
 
+
+const mapStateToProps = state => ({
+  // todo: save scores and stars to memory
+  currentScore: state.score.currentScore,
+  currentStar: state.score.currentStar,
+  totalScore: state.score.totalScore
+})
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  updateFinalScore
+}, dispatch)
 
 class SuccessScreen extends Component{
   constructor(props) {
@@ -18,7 +34,13 @@ class SuccessScreen extends Component{
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>
-        You won
+        Your score of this quest is {this.props.currentScore}
+      </Text>
+      <Text style={styles.welcome}>
+        Your star of this quest is {this.props.currentStar}
+      </Text>
+      <Text style={styles.welcome}>
+        Your total score is {this.props.totalScore}
       </Text>
       <Button title={"Quit"}
               style={{ marginTop: 10 }}
@@ -45,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SuccessScreen
+export default connect(mapStateToProps, mapDispatchToProps)(SuccessScreen)
