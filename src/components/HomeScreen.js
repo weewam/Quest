@@ -105,11 +105,6 @@ class HomeScreen extends Component {
       );
     }, 1000)
 
-    setInterval(() => {
-      this.setState({
-        curTime: new Date().getTime()
-      })
-    }, 1000)
     this.watchId = navigator.geolocation.watchPosition(
       (position) => {
         this.props.setPosition(position)
@@ -160,18 +155,6 @@ class HomeScreen extends Component {
     const selectedQuest = locations[selectedQuestIndex];
     const focusedQuest = locations[focusedQuestIndex];
 
-    const currentSeconds = (selectedQuest.countdown - this.state.curTime)/1000;
-    const days = Math.floor(currentSeconds/24/60/60);
-    const hoursLeft   = Math.floor((currentSeconds) - (days*86400));
-    const hours       = Math.floor(hoursLeft/3600);
-    const minutesLeft = Math.floor((hoursLeft) - (hours*3600));
-    const minutes     = Math.floor(minutesLeft/60);
-    const remainingSeconds = parseInt(currentSeconds % 60, 10);
-    const showDays = days < 10? "0"+days : days;
-    const showHours = hours < 10? "0"+hours : hours;
-    const showMins = minutes < 10? "0"+minutes : minutes;
-    const showSecs = remainingSeconds < 10? "0"+remainingSeconds : remainingSeconds;
-
     return (
       <View style={styles.outerContainer}>
         
@@ -189,14 +172,13 @@ class HomeScreen extends Component {
             <Compass />
 
             <View style={styles.content}>
-              <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
-              <Text style={styles.locationText}>{ selectedQuest.place }</Text>
-              <Text style={styles.locationText}>{ showDays } D { showHours } H { showMins } M { showSecs } S</Text>
+              <Text style={styles.locationName}>{ selectedQuest.place }</Text>
+              <Text style={styles.locationDistance}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
             </View>
 
             <View style={styles.sliderItemContainer}>
               <View style={styles.focusedQuestContainer}>
-                <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
+                <Text style={styles.focusedHeader}> { focusedQuest.provider} </Text>
                 <Text style={styles.focusedText}> { focusedQuest.name} </Text>
               </View>
 
@@ -217,7 +199,7 @@ class HomeScreen extends Component {
 
           <View style={styles.innerContainer}>
             <View style={styles.topBarContainer}>
-              <Text style={[styles.topBarText, { fontSize: 20 }]}>Quest Overview</Text>
+              <Text style={[styles.topBarText, { fontSize: 18, fontWeight: '700', letterSpacing: 0.5 }]}>Quest Overview</Text>
             </View>
 
             <View style={[styles.content]}>
@@ -293,17 +275,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0)',
   },
-  locationText: {
+  locationName: {
     fontSize: 24,
     color: 'white',
-    fontWeight: '500',
+    fontWeight: '700',
+  },
+  locationDistance: {
+    fontSize: 20,
+    color: 'white',
   },
   focusedQuestContainer: {
-    marginBottom: 30,
+    marginBottom: 15,
+  },
+  focusedHeader: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: 'white',
+    textAlign: 'center',
   },
   focusedText: {
-    fontSize: 18,
-    fontWeight: '500',
+    marginTop: 5,
+    fontSize: 16,
     color: 'white',
     textAlign: 'center',
   },
