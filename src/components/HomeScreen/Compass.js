@@ -59,7 +59,7 @@ class Compass extends Component {
     render() {
         return (
             < View style={styles.container} >
-                <Image source={{ uri: 'https://i.imgur.com/FEB6TP0.png' }} style={{ width: 97.98, height: 142.33, transform: [{ rotate: this.updateCompass() }] }} />
+                <Image source={{ uri: 'https://i.imgur.com/lUiIeq4.png' }} style={{ width: 97.98, height: 142.33, transform: [{ rotate: this.updateCompass() }] }} />
             </View >
         );
     }
