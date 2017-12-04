@@ -52,14 +52,14 @@ class Compass extends Component {
         let latPos = currentPosition.lat - selectedQuestCoords.lat
         let longPos = currentPosition.long - selectedQuestCoords.long
         let headingRadians = this.state.heading * Math.PI / 180
-
-
-        return Math.atan2(latPos, longPos) - headingRadians + 'rad'
+        let res = Math.atan2(latPos, longPos) - headingRadians + 'rad'
+        console.log("RES: " + res)
+        return res
     }
     render() {
         return (
             < View style={styles.container} >
-                <Image source={{ uri: 'https://i.imgur.com/lUiIeq4.png' }} style={{ width: 97.98, height: 142.33, transform: [{ rotate: this.updateCompass() }] }} />
+                <Image source={{ uri: 'https://i.imgur.com/lUiIeq4.png' }} style={{ width: 99, height: 147, transform: [{ rotate: this.updateCompass() }] }} />
             </View >
         );
     }
