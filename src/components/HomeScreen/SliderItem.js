@@ -11,7 +11,7 @@ import {
 import { distanceFromPhone } from '../../MapUtils'
 
 const borderGap = 5;
-const borderWidth = 3;
+const borderWidth = 2;
 
 export default class SliderItem extends Component {
   constructor(props) {
@@ -49,13 +49,13 @@ export default class SliderItem extends Component {
 
     let itemText = <Text style={styles.itemText}>{ `${ distance } km`}</Text>;
     if (selected) {
-      let opacity = (playable) ? 1 : 0.8;
-      itemText = <Text style={ [styles.itemText, { position: 'relative', top: 15, opacity: opacity }] }>Play</Text>
+      let opacity = (playable) ? 1 : 0.85;
+      itemText = <Text style={ [styles.itemText, { position: 'relative', top: 5, opacity: opacity }] }>Play</Text>
     }
 
     let scaleInterpolation = selectedAnim.interpolate({
       inputRange: [0, 1],
-      outputRange: [1, 1.3]
+      outputRange: [1, 1.2]
     })
 
     return (
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 14,
     color: 'white',
-    fontWeight: 'bold',
     letterSpacing: 0.25,
+    fontFamily: "Montserrat-SemiBold",
   },
 });

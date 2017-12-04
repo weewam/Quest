@@ -150,7 +150,7 @@ class HomeScreen extends Component {
     }.bind(this))
 
     const geoLocationComponent = (
-      <Text style={styles.topBarText}> {this.state.geoLocation} </Text>
+      <Text style={[ styles.topBarText, { letterSpacing: 0.5 } ]}> {this.state.geoLocation} </Text>
     )
 
     const questGalleryList = locations.map(function (item, i) {
@@ -175,9 +175,9 @@ class HomeScreen extends Component {
               <Image source={{ uri: this.props.userAvatar }} style={styles.topBarAvatar}/>
               { geoLocationComponent }
             </View>
-
-            <Compass />
             <View style={styles.content}>
+              <Compass />
+
               <Text style={styles.locationName}>{ selectedQuest.place }</Text>
               <Text style={styles.locationDistance}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
             </View>
@@ -205,7 +205,7 @@ class HomeScreen extends Component {
 
           <View style={styles.innerContainer}>
             <View style={styles.topBarContainer}>
-              <Text style={[styles.topBarText, { fontSize: 18, fontWeight: '700', letterSpacing: 0.5 }]}>Quest Overview</Text>
+              <Text style={[styles.topBarText, { fontSize: 18, letterSpacing: 0.5 }]}>City Overview</Text>
             </View>
 
             <View style={[styles.content]}>
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
   topBarText: {
     color: 'white',
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: "Montserrat-SemiBold",
     textAlignVertical: 'center',
   },
 
@@ -284,26 +284,31 @@ const styles = StyleSheet.create({
   locationName: {
     fontSize: 24,
     color: 'white',
-    fontWeight: '700',
+    fontFamily: "Montserrat-Bold",
   },
   locationDistance: {
+    marginTop: 5,
     fontSize: 20,
-    color: 'white',
+    color: 'rgba(255, 255, 255, 0.85)',
+    fontFamily: "Montserrat-SemiBold",
   },
   focusedQuestContainer: {
     marginBottom: 15,
   },
   focusedHeader: {
     fontSize: 18,
-    fontWeight: '700',
     color: 'white',
     textAlign: 'center',
+    fontFamily: "Montserrat-Bold",
+    letterSpacing: 0.25,
   },
   focusedText: {
     marginTop: 5,
     fontSize: 16,
-    color: 'white',
+    color: 'rgba(255, 255, 255, 0.85)',
     textAlign: 'center',
+    fontFamily: "Montserrat-SemiBold",
+    letterSpacing: 0.25,
   },
 
   sliderItemContainer: {
@@ -326,7 +331,7 @@ const styles = StyleSheet.create({
   },
   questOverviewText: {
     fontSize: 18,
-    fontWeight: '500',
+    fontFamily: "Montserrat-SemiBold",
     color: '#fff',
   }
 });
