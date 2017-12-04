@@ -176,9 +176,9 @@ class HomeScreen extends Component {
               { geoLocationComponent }
             </View>
 
-            <Compass />
-
             <View style={styles.content}>
+              <Compass />
+
               <Text style={styles.locationName}>{ selectedQuest.place }</Text>
               <Text style={styles.locationDistance}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
             </View>

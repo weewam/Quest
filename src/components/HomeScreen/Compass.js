@@ -59,7 +59,7 @@ class Compass extends Component {
     render() {
         return (
             < View style={styles.container} >
-                <Image source={{ uri: 'https://i.imgur.com/lUiIeq4.png' }} style={{ width: 99, height: 147, transform: [{ rotate: this.updateCompass() }] }} />
+                <Image source={{ uri: 'https://i.imgur.com/lUiIeq4.png' }} style={{ width: 99 * 0.6, height: 147 * 0.6, transform: [{ rotate: this.updateCompass() }] }} />
             </View >
         );
     }
@@ -67,10 +67,10 @@ class Compass extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgb(215, 150, 140)',
+        marginBottom: 20,
     }
 });
 export default connect(mapStateToProps)(Compass)
