@@ -38,7 +38,7 @@ import {
 //Components
 import Background from '../components/Backgrounds/Background1'
 import SliderItem from './HomeScreen/SliderItem';
-import FunctionList from './HomeScreen/FunctionList';
+import QuestGalleryItem from './HomeScreen/QuestGalleryItem';
 
 //Contants
 const WIDTH = Dimensions.get('window').width,
@@ -52,6 +52,8 @@ const mapStateToProps = state => ({
   selectedQuestIndex: state.quests.selectedQuest,
   currentPosition: state.position.coords,
   focusedQuestIndex: state.quests.focusedQuest,
+  userName: state.user.name,
+  userAvatar: state.user.avatar,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
@@ -178,6 +180,12 @@ class HomeScreen extends Component {
       )
     }.bind(this))
 
+    const questGalleryList = locations.map(function (item, i) {
+      return (
+        <QuestGalleryItem key={i} {...item} played={selectedQuestIndex === i} stars={selectedQuestIndex === i} />
+      )
+    }.bind(this))
+
     const geoLocationComponent =  (
       <Text style={styles.topBarText}> {this.state.geoLocation} </Text>
     )
@@ -206,7 +214,8 @@ class HomeScreen extends Component {
               <Background width={WIDTH + 10} />
             </View>
 
-            <View style={styles.topBarContainer}>
+            <View style={[styles.topBarContainer, styles.topBarContainerColumn]}>
+              <Image source={{ uri: this.props.userAvatar }} style={styles.topBarAvatar}/>
               { geoLocationComponent }
             </View>
 
@@ -243,20 +252,11 @@ class HomeScreen extends Component {
 
           <View style={styles.innerContainer}>
             <View style={styles.topBarContainer}>
-              <Text>User Name</Text>
+              <Text style={styles.topBarText}>{ this.props.userName }</Text>
             </View>
 
-            <ScrollView style={styles.scrollView} horizontal={true}>
-              <View>
-                <Text>Maybe we postpone the avatar room</Text>
-              </View>
-              <View>
-                <Text>Not implement this function on this stage</Text>
-              </View>
-            </ScrollView>
-
-            <View>
-                <FunctionList navigator={this.props.navigation}/>
+            <View style={styles.questsOverview}>
+              { questGalleryList }
             </View>
           </View>
         </ScrollView>
@@ -288,23 +288,31 @@ const styles = StyleSheet.create({
 
   topBarContainer: {
     flex: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+
     height: 80,
     paddingTop: 15,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
+    paddingLeft: 15,
+    paddingRight: 15,
+
     borderBottomColor: '#EAE086',
     borderBottomWidth: 5,
   },
+  topBarContainerColumn: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  topBarAvatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+  },
   topBarText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '500',
     textAlignVertical: 'center',
-  },
-  locationText: {
-    fontSize: 24,
-    color: 'white',
-    fontWeight: '500',
   },
 
   content: {
@@ -312,6 +320,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0)',
+  },
+  locationText: {
+    fontSize: 24,
+    color: 'white',
+    fontWeight: '500',
   },
   
   focusedQuestContainer: {
@@ -328,6 +341,12 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
     backgroundColor: 'rgba(0, 0, 0, 0)',
   },
+
+  questsOverview: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  }
 });
 
 
