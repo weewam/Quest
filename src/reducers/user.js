@@ -6,11 +6,11 @@ const selectedQuestion = locations.map(() => {
 
 const initialState = {
 	name : 'Jonte Henrik Birger af Svanberg',
-	avatar : 'http://graph.facebook.com/659327798/picture?type=large',
+	avatar : 'https://scontent.xx.fbcdn.net/v/t1.0-1/p480x480/14022284_10153890736437799_6132373776909058548_n.jpg?oh=a7a4cd7f03ad6f2c74d45caea1c6cc9f&oe=5ACB15B7',
 }
 
 
-export const quests = (state = initialState, action) => {
+export const user = (state = initialState, action) => {
 	switch (action.type) {
 		case 'SET_SELECTED_QUEST':
 			return {
@@ -38,40 +38,5 @@ export const quests = (state = initialState, action) => {
 			};
 		default:
 			return state;
-	}
-}
-
-export const setQuest = (selectQuest) => {
-	return dispatch => {
-		dispatch({
-			type: 'SET_SELECTED_QUEST',
-			selectedId: selectQuest
-		})
-	}
-}
-
-export const setFocusedQuest = (selectQuest) => {
-
-	return dispatch => {
-		dispatch({
-			type: 'SET_FOCUSED_QUEST',
-			selectedId: selectQuest
-		})
-	}
-}
-export const setNextQuestion = (nextQuestion) => {
-	return dispatch => {
-		dispatch({
-			type: 'SET_NEXT_QUESTION',
-			nextQuestionId: nextQuestion
-		})
-	}
-}
-export const nextQuestion = () => {
-
-	return dispatch => {
-		dispatch({
-			type: 'NEXT_QUESTION'
-		})
 	}
 }

@@ -34,13 +34,12 @@ import {
   setQuest,
   setFocusedQuest
 } from '../reducers/quests';
-import Swiper from '../reducers/swiper';
 
 //Components
 import Background from '../components/Backgrounds/Background1'
 import SliderItem from './HomeScreen/SliderItem';
-import FunctionList from './HomeScreen/FunctionList';
 import Compass from './HomeScreen/Compass';
+import QuestGalleryItem from './HomeScreen/QuestGalleryItem';
 
 //Contants
 const WIDTH = Dimensions.get('window').width,
@@ -54,6 +53,8 @@ const mapStateToProps = state => ({
   selectedQuestIndex: state.quests.selectedQuest,
   currentPosition: state.position.coords,
   focusedQuestIndex: state.quests.focusedQuest,
+  userName: state.user.name,
+  userAvatar: state.user.avatar,
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
@@ -149,94 +150,78 @@ class HomeScreen extends Component {
     const geoLocationComponent = (
       <Text style={styles.topBarText}> {this.state.geoLocation} </Text>
     )
+    
+    const questGalleryList = locations.map(function (item, i) {
+      return (
+        <QuestGalleryItem key={i} {...item} played={selectedQuestIndex === i} stars={selectedQuestIndex === i} />
+      )
+    }.bind(this))
 
     const selectedQuest = locations[selectedQuestIndex];
-    const focusedQuest = locations[0]
-    const currentSeconds = (selectedQuest.countdown - this.state.curTime) / 1000;
-    const days = Math.floor(currentSeconds / 24 / 60 / 60);
-    const hoursLeft = Math.floor((currentSeconds) - (days * 86400));
-    const hours = Math.floor(hoursLeft / 3600);
-    const minutesLeft = Math.floor((hoursLeft) - (hours * 3600));
-    const minutes = Math.floor(minutesLeft / 60);
-    const remainingSeconds = parseInt(currentSeconds % 60, 10);
-    const showDays = days < 10 ? "0" + days : days;
-    const showHours = hours < 10 ? "0" + hours : hours;
-    const showMins = minutes < 10 ? "0" + minutes : minutes;
-    const showSecs = remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds;
-    //Image source={{ uri: reward[0]}} style={styles.iconImage}/>
+    const focusedQuest = locations[focusedQuestIndex];
 
-    const rewardList = focusedQuest.rewards.map((reward, i) => (
-      <View style={styles.iconView} key={i}>
-        <Image source={{ uri: "https://png.icons8.com/paper-money/win8/1600" }} style={styles.iconImage} />
-        <Text style={styles.rewardText}> {reward[1]} </Text>
-      </View>
-    ));
+    const currentSeconds = (selectedQuest.countdown - this.state.curTime)/1000;
+    const days = Math.floor(currentSeconds/24/60/60);
+    const hoursLeft   = Math.floor((currentSeconds) - (days*86400));
+    const hours       = Math.floor(hoursLeft/3600);
+    const minutesLeft = Math.floor((hoursLeft) - (hours*3600));
+    const minutes     = Math.floor(minutesLeft/60);
+    const remainingSeconds = parseInt(currentSeconds % 60, 10);
+    const showDays = days < 10? "0"+days : days;
+    const showHours = hours < 10? "0"+hours : hours;
+    const showMins = minutes < 10? "0"+minutes : minutes;
+    const showSecs = remainingSeconds < 10? "0"+remainingSeconds : remainingSeconds;
 
     return (
       <View style={styles.outerContainer}>
-        <View style={styles.background}>
-          <Background width={WIDTH + 10} />
-        </View>
-
-        <ScrollView snapToInterval={HEIGHT} decelerationRate={'fast'} showsVerticalScrollIndicator={false}>
-          <View style={styles.topBarContainer}>
-            {geoLocationComponent}
-          </View>
-
-          <Compass />
+        
+        <ScrollView snapToInterval={HEIGHT} decelerationRate={ 'fast' } showsVerticalScrollIndicator={ false }>
           <View style={styles.innerContainer}>
-            <Swiper>
-              <View style={styles.content}>
-                <Text style={styles.locationText}>{(Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km"}</Text>
-                <Text style={styles.locationText}>{selectedQuest.place}</Text>
-                <Text style={styles.locationText}>{showDays} D {showHours} H {showMins} M {showSecs} S</Text>
-              </View>
-              <View style={styles.rewardView}>
-                {rewardList}
-              </View>
-            </Swiper>
-
-            <View>
-              <View ref={() => this.focusedQuestView} style={styles.content}>
-                <Text style={styles.focusedText}> {focusedQuest.provider} </Text>
-                <Text style={styles.focusedText}> {focusedQuest.name} </Text>
-              </View>
-              <View style={styles.scrollView}>
-                <ScrollView
-                  ref={(list) => this.questScroll = list}
-
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-
-                  onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
-
-                  decelerationRate={'fast'}
-
-                  snapToAlignment={'center'}
-                  snapToInterval={buttonWidth + itemSpacing}
-                  contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
-                  contentOffset={{ x: -initScrollPosition }}>
-                  {loctionList}
-                </ScrollView>
-              </View>
+            <View style={styles.background}>
+              <Background width={WIDTH + 10} />
             </View>
-          </View>
 
-          <View style={styles.innerContainer}>
+            <View style={[styles.topBarContainer, styles.topBarContainerColumn]}>
+              <Image source={{ uri: this.props.userAvatar }} style={styles.topBarAvatar}/>
+              { geoLocationComponent }
+            </View>
+
+            <Compass />
+
             <View style={styles.content}>
-              <Text>User Name</Text>
+              <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
+              <Text style={styles.locationText}>{ selectedQuest.place }</Text>
+              <Text style={styles.locationText}>{ showDays } D { showHours } H { showMins } M { showSecs } S</Text>
             </View>
-            <ScrollView style={styles.scrollView} horizontal={true}>
-              <View>
-                <Text>Maybe we postpone the avatar room</Text>
-              </View>
-              <View>
-                <Text>Not implement this function on this stage</Text>
-              </View>
-            </ScrollView>
 
-            <View>
-              <FunctionList navigator={this.props.navigation} />
+            <View style={styles.sliderItemContainer}>
+              <View style={styles.focusedQuestContainer}>
+                <Text style={styles.focusedText}> { focusedQuest.provider} </Text>
+                <Text style={styles.focusedText}> { focusedQuest.name} </Text>
+              </View>
+
+              <ScrollView
+                ref={ (list) => this.questScroll = list }
+                horizontal={true}
+                showsHorizontalScrollIndicator={ false }
+                onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
+                decelerationRate={ 'fast' }
+                snapToAlignment={ 'center' }
+                snapToInterval={ buttonWidth + itemSpacing }
+                contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
+                contentOffset={{ x : -initScrollPosition }}>
+                { loctionList }
+              </ScrollView>
+            </View>
+          </View>
+
+          <View style={styles.innerContainer}>
+            <View style={styles.topBarContainer}>
+              <Text style={styles.topBarText}>{ this.props.userName }</Text>
+            </View>
+
+            <View style={styles.questsOverview}>
+              { questGalleryList }
             </View>
           </View>
         </ScrollView>
@@ -252,25 +237,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgb(215, 150, 140)',
   },
-  topBarContainer: {
-    height: HEIGHT * 0.075,
-    backgroundColor: 'rgb(245, 150, 140)',
-    paddingTop: 20,
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-  },
-  topBarText: {
-    marginTop: 20,
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '500',
-    marginRight: 2,
-    marginBottom: 8,
-  },
   background: {
     position: 'absolute',
-    bottom: 0,
-    left: -10
+    bottom : 0,
+    left : -10,
+    borderBottomColor: '#EAE086',
+    borderBottomWidth: 10,
   },
 
   innerContainer: {
@@ -280,50 +252,65 @@ const styles = StyleSheet.create({
     paddingTop: 0
   },
 
+  topBarContainer: {
+    flex: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    height: 80,
+    paddingTop: 15,
+    paddingLeft: 15,
+    paddingRight: 15,
+
+    borderBottomColor: '#EAE086',
+    borderBottomWidth: 5,
+  },
+  topBarContainerColumn: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  topBarAvatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+  },
+  topBarText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '500',
+    textAlignVertical: 'center',
+  },
+
   content: {
-    flex: 2,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 30,
+    backgroundColor: 'rgba(0, 0, 0, 0)',
   },
   locationText: {
     fontSize: 24,
-    fontWeight: '500',
     color: 'white',
+    fontWeight: '500',
   },
-  button: {
-    fontSize: 24,
-    fontWeight: '500',
-    color: 'white',
+  focusedQuestContainer: {
+    marginBottom: 30,
   },
   focusedText: {
     fontSize: 18,
     fontWeight: '500',
     color: 'white',
+    textAlign: 'center',
   },
-  scrollView: {
-    paddingBottom: 80,
-    paddingTop: 0,
+  
+  sliderItemContainer: {
+    paddingBottom: 40,
+    backgroundColor: 'rgba(0, 0, 0, 0)',
   },
-  rewardView: {
-    flex: 2,
+
+  questsOverview: {
     justifyContent: 'center',
-    marginLeft: 80,
-    marginBottom: 30,
-  },
-  rewardText: {
-    fontSize: 18,
-    fontWeight: '500',
-    marginBottom: 10,
-    color: 'white',
-  },
-  iconImage: {
-    width: 30,
-    height: 15,
-    marginRight: 20
-  },
-  iconView: {
     flexDirection: 'row',
+    flexWrap: 'wrap'
   }
 });
 

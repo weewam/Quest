@@ -41,10 +41,16 @@ export default class SliderItem extends Component {
     let distance = Math.floor(distanceFromPhone(phoneLocation, eventLocation) * 10) / 10
     
     let outerCircleDimension = itemDimension + 2 * (borderGap + borderWidth);
-    let playableCircle = null;
 
+    let playableCircle = null;
     if (playable) {
       playableCircle = <View style={[styles.itemPlayable, { width: outerCircleDimension, height: outerCircleDimension, borderRadius: outerCircleDimension / 2 }]} />
+    }
+
+    let itemText = <Text style={styles.itemText}>{ `${ distance } km`}</Text>;
+    if (selected) {
+      let opacity = (playable) ? 1 : 0.8;
+      itemText = <Text style={ [styles.itemText, { position: 'relative', top: 15, opacity: opacity }] }>Play</Text>
     }
 
     let scaleInterpolation = selectedAnim.interpolate({
@@ -60,7 +66,7 @@ export default class SliderItem extends Component {
             <Image source={{ uri: image }} style={[styles.itemImage, { width: itemDimension, height: itemDimension, borderRadius: itemDimension / 2 }]} />
           </Animated.View>
 
-           <Text style={styles.itemText}> {!selected && distance + ' km'} </Text>
+          { itemText }
         </View>
       </TouchableHighlight>
     );
@@ -70,7 +76,8 @@ export default class SliderItem extends Component {
 const styles = StyleSheet.create({
   itemContainer: {
     alignItems: 'center',
-    paddingTop: 30,
+    paddingTop: 25,
+    paddingBottom: 15,
     marginLeft: 20,
     marginRight: 20,
   },
@@ -101,7 +108,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   itemText: {
-    marginTop: 30,
+    marginTop: 20,
     fontSize: 18,
     color: 'white',
     fontWeight: 'bold',

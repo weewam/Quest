@@ -63,6 +63,7 @@ class QuestScreen extends Component{
       showInfo: false,
       showQuestions: false,
       questScreenModal: null,
+      totalScore: 0
     }
 
     setModalVisible(visible) {
@@ -82,6 +83,7 @@ class QuestScreen extends Component{
     updateQuestion(correctAnswer){
       if(correctAnswer) {
         this.props.nextQuestion()
+        this.quizModal.resetState()
       } else{
         this.setModalVisible(!this.state.modalVisible)
         this.props.navigation.navigate("FailedScreen")
@@ -89,9 +91,10 @@ class QuestScreen extends Component{
       }
     }
 
-    
-    finishQuest(success) {
+
+    finishQuest(success, score) {
       this.setModalVisible(!this.state.modalVisible)
+      this.updateScore(score)
       if(success) {
         this.props.navigation.navigate("SuccessScreen")
       } else {
@@ -101,6 +104,9 @@ class QuestScreen extends Component{
 
     }
 
+    updateScore(currentScore){
+      this.state.totalScore += currentScore
+    }
 
    render() {
     const { selectedQuestIndex, currentPosition, selectedQuestion } = this.props
@@ -113,12 +119,15 @@ class QuestScreen extends Component{
     }
 
     if (this.state.questScreenModal === "quiz") {
-      modal = 
-      <QuizModal 
-      lastQuestion={selectedQuestion[this.props.selectedQuestIndex] === (locations[this.props.selectedQuestIndex].questions.length-1)} 
-      selectedQuestion={locations[this.props.selectedQuestIndex].questions[this.props.selectedQuestion[this.props.selectedQuestIndex]]} 
-      callback={this.updateQuestion.bind(this)} 
+      modal =
+      <QuizModal
+      lastQuestion={selectedQuestion[this.props.selectedQuestIndex] === (locations[this.props.selectedQuestIndex].questions.length-1)}
+      selectedQuestion={locations[this.props.selectedQuestIndex].questions[this.props.selectedQuestion[this.props.selectedQuestIndex]]}
+      callback={this.updateQuestion.bind(this)}
       finishQuest={this.finishQuest.bind(this)}
+      totalScore={this.state.totalScore}
+      updateScore={this.updateScore.bind(this)}
+      ref={instance => { this.quizModal = instance; }}
       />
     }
 
@@ -130,7 +139,7 @@ class QuestScreen extends Component{
               <Text style={styles.backButton}>{'<'} Back</Text>
             </View>
           </TouchableHighlight>
-          
+
 
         </View>
         <View style={styles.container}>
@@ -141,14 +150,14 @@ class QuestScreen extends Component{
             <Text style={styles.text}>{ selectedQuest.place }</Text>
           </View>
           <View >
-            
+
             {this.state.showInfo === true && <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => {
               this.state.questScreenModal = "info"
               this.setModalVisible(true)
-              
+
             }}>
             <View style={styles.buttonContainer}>
-              <Text style={styles.buttonStyle}> 
+              <Text style={styles.buttonStyle}>
                 {this.renderInfo()}
               </Text>
             </View>
@@ -159,17 +168,17 @@ class QuestScreen extends Component{
             {this.state.showQuestions === true && <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => {
               this.state.questScreenModal = "quiz"
               this.setModalVisible(true)
-              
+
             }}>
             <View style={styles.buttonContainer}>
-              <Text style={styles.buttonStyle}> 
+              <Text style={styles.buttonStyle}>
                 {this.renderQuestions()}
               </Text>
             </View>
             </TouchableHighlight>
             }
-            
-            
+
+
           </View>
           <View style={styles.modalView}>
             <Modal
@@ -198,7 +207,7 @@ class QuestScreen extends Component{
               </Modal>
             </View>
         </View>
-        
+
       </View>
     );
   }
