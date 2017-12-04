@@ -38,6 +38,7 @@ import {
 //Components
 import Background from '../components/Backgrounds/Background1'
 import SliderItem from './HomeScreen/SliderItem';
+import Compass from './HomeScreen/Compass';
 import QuestGalleryItem from './HomeScreen/QuestGalleryItem';
 
 //Contants
@@ -66,7 +67,7 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      curTime : new Date().getTime(),
+      curTime: new Date().getTime(),
       latitude: 59.333184,
       longitude: 18.076914,
       coords: { lat: 59.333184, long: 18.076914 },
@@ -88,7 +89,7 @@ class HomeScreen extends Component {
   }
 
   async componentDidMount() {
-    setInterval( () => {
+    setInterval(() => {
       Geocoder.setApiKey('AIzaSyA0d3gB_dXyNRkhG7HtwzAKSWHidVFexOA');
       const geoLocationResult = Geocoder.getFromLatLng(parseFloat(this.props.currentPosition.lat), parseFloat(this.props.currentPosition.long)).then(
         json => {
@@ -102,47 +103,13 @@ class HomeScreen extends Component {
           //alert(error);
         }
       );
-    },1000)
+    }, 1000)
 
-    setInterval( () => {
+    setInterval(() => {
       this.setState({
-        curTime : new Date().getTime()
+        curTime: new Date().getTime()
       })
-    },1000)
-
-    /*
-    console.log("Get permission")
-    const { setPosition } = this.props
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          'title': 'Quest Permission',
-          'message': 'Quest App needs access to your location'
-        }
-      )
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("Permission granted")
-        navigator.geolocation.getCurrentPosition(
-          (position) => setPosition(position),
-          (error) => {
-            console.log(error)
-            this.setState({ error: error.message })
-          },
-          { enableHighAccuracy: true, timeout: 230 },
-        )
-        console.log("Got position")
-        this.watchId = navigator.geolocation.watchPosition(
-          (position) => setPosition(position),
-          (error) => this.setState({ error: error.message }),
-          { enableHighAccuracy: true, timeout: 60, maximumAge: 1000, distanceFilter: 10 },
-        )
-      } else {
-        console.log("Permission denied")
-      }
-    } catch (err) {
-      console.warn(err)
-    }*/
+    }, 1000)
     this.watchId = navigator.geolocation.watchPosition(
       (position) => {
         this.props.setPosition(position)
@@ -151,17 +118,17 @@ class HomeScreen extends Component {
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
     );
 
-    
+
     const { selectedQuestIndex } = this.props
     this.questScroll.scrollTo({ x: -initScrollPosition + selectedQuestIndex * (buttonWidth + itemSpacing), animated: true })
   }
 
-   updateSelectedQuestOnMomentumEnds(event: Object) {
+  updateSelectedQuestOnMomentumEnds(event: Object) {
     const { setFocusedQuest } = this.props
 
-    const index = Math.round((event.nativeEvent.contentOffset.x + initScrollPosition) /(buttonWidth+itemSpacing), 1.0)
+    const index = Math.round((event.nativeEvent.contentOffset.x + initScrollPosition) / (buttonWidth + itemSpacing), 1.0)
     setFocusedQuest(index)
-   }
+  }
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchId);
@@ -175,20 +142,20 @@ class HomeScreen extends Component {
     const loctionList = locations.map(function (item, i) {
       let pos = -initScrollPosition + i * (buttonWidth + itemSpacing);
       return (
-        <SliderItem key={i} {...item} selected={selectedQuestIndex === i}  focused={focusedQuestIndex === i} itemDimension={buttonWidth} eventLocation={item.coords}
+        <SliderItem key={i} {...item} selected={selectedQuestIndex === i} focused={focusedQuestIndex === i} itemDimension={buttonWidth} eventLocation={item.coords}
           itemSpacing={itemSpacing} callback={this.updateSelectedQuest.bind(this, i, pos)} phoneLocation={currentPosition} />
       )
     }.bind(this))
 
+    const geoLocationComponent = (
+      <Text style={styles.topBarText}> {this.state.geoLocation} </Text>
+    )
+    
     const questGalleryList = locations.map(function (item, i) {
       return (
         <QuestGalleryItem key={i} {...item} played={selectedQuestIndex === i} stars={selectedQuestIndex === i} />
       )
     }.bind(this))
-
-    const geoLocationComponent =  (
-      <Text style={styles.topBarText}> {this.state.geoLocation} </Text>
-    )
 
     const selectedQuest = locations[selectedQuestIndex];
     const focusedQuest = locations[focusedQuestIndex];
@@ -219,6 +186,8 @@ class HomeScreen extends Component {
               { geoLocationComponent }
             </View>
 
+            <Compass />
+
             <View style={styles.content}>
               <Text style={styles.locationText}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
               <Text style={styles.locationText}>{ selectedQuest.place }</Text>
@@ -233,14 +202,10 @@ class HomeScreen extends Component {
 
               <ScrollView
                 ref={ (list) => this.questScroll = list }
-
                 horizontal={true}
                 showsHorizontalScrollIndicator={ false }
-
                 onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
-
                 decelerationRate={ 'fast' }
-
                 snapToAlignment={ 'center' }
                 snapToInterval={ buttonWidth + itemSpacing }
                 contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
@@ -283,7 +248,8 @@ const styles = StyleSheet.create({
   innerContainer: {
     flex: 1,
     width: WIDTH,
-    height: HEIGHT
+    height: HEIGHT,
+    paddingTop: 0
   },
 
   topBarContainer: {
@@ -326,7 +292,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '500',
   },
-  
   focusedQuestContainer: {
     marginBottom: 30,
   },
