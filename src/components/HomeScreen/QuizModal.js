@@ -19,6 +19,8 @@ class QuizModal extends Component{
         selectedOptions: [],
         score: this.props.selectedQuestion[1].length
       };
+      console.log("resetState:", this.props.selectedQuestion[1])
+      this.props.updateMaxScore(this.props.selectedQuestion[1].length)
   }
 
   resetState(){
@@ -27,11 +29,13 @@ class QuizModal extends Component{
       selectedOptions: [],
       score: this.props.selectedQuestion[1].length
     })
+    console.log("resetState:", this.props.selectedQuestion[1])
+    this.props.updateMaxScore(this.props.selectedQuestion[1].length)
   }
 
   calScore(){
     if(this.state.selectedAnswer === this.props.selectedQuestion[2]){
-      this.props.updateScore(this.state.score)
+      this.props.updateCurrentScore(this.state.score)
       this.props.callback((this.state.selectedAnswer === this.props.selectedQuestion[2]));
     } else{
       this.setState({selectedOptions:[...this.state.selectedOptions, this.state.selectedAnswer]});
@@ -100,6 +104,12 @@ class QuizModal extends Component{
         </View>
         )
 
+    const scoreView = (
+      <View>
+        <Text style={styles.aboutText}>Potential Score: {this.state.score}</Text>
+        <Text style={styles.aboutText}>Current Score: {this.props.currentScore}</Text>
+      </View>
+    )
     return(
       <View style={styles.quizContainer}>
         <View style={styles.quiz}>
@@ -111,6 +121,7 @@ class QuizModal extends Component{
 
         </View>
         {(lastQuestion) ? finishButton : nextButton}
+        {scoreView}
       </View>
 
     )

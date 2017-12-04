@@ -26,7 +26,9 @@ import {
   nextQuestion,
   setNextQuestion,
 } from '../../reducers/quests';
-
+import {
+  updateFinalScore
+} from '../../reducers/score'
 
 
 //Contants
@@ -42,6 +44,10 @@ const mapStateToProps = state => ({
   currentPosition: state.position.coords,
   focusedQuestIndex: state.quests.focusedQuest,
   selectedQuestion: state.quests.selectedQuestion,
+  // todo: save scores and stars to memory
+  currentScore: state.score.currentScore,
+  currentStar: state.score.currentStar,
+  totalScore: state.score.totalScore
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
@@ -49,6 +55,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   setFocusedQuest,
   nextQuestion,
   setNextQuestion,
+  updateFinalScore
 }, dispatch)
 
 class QuestScreen extends Component{
@@ -57,13 +64,13 @@ class QuestScreen extends Component{
         this.state.showInfo = locations[this.props.selectedQuestIndex].about != null
         this.state.showQuestions = locations[this.props.selectedQuestIndex].questions != null
      }
-
     state = {
       modalVisible: false,
       showInfo: false,
       showQuestions: false,
       questScreenModal: null,
-      totalScore: 0
+      currentScore: 0,
+      maxScore: 0
     }
 
     setModalVisible(visible) {
@@ -94,8 +101,16 @@ class QuestScreen extends Component{
 
     finishQuest(success, score) {
       this.setModalVisible(!this.state.modalVisible)
-      this.updateScore(score)
+      this.updateCurrentScore(score)
       if(success) {
+        // console.log("updateFinalScore:", this.state.currentScore, this.state.maxScore)
+        if(this.state.currentScore/this.state.maxScore >= 0.66){
+          this.props.updateFinalScore(this.state.currentScore, "***")
+        } else if(this.state.currentScore/this.state.maxScore < 0.33){
+          this.props.updateFinalScore(this.state.currentScore, "*")
+        } else {
+          this.props.updateFinalScore(this.state.currentScore, "**")
+        }
         this.props.navigation.navigate("SuccessScreen")
       } else {
         this.props.navigation.navigate("FailedScreen")
@@ -104,8 +119,12 @@ class QuestScreen extends Component{
 
     }
 
-    updateScore(currentScore){
-      this.state.totalScore += currentScore
+    updateCurrentScore(currentScore){
+      this.state.currentScore += currentScore
+    }
+
+    updateMaxScore(maxScore){
+      this.state.maxScore += maxScore
     }
 
    render() {
@@ -125,8 +144,9 @@ class QuestScreen extends Component{
       selectedQuestion={locations[this.props.selectedQuestIndex].questions[this.props.selectedQuestion[this.props.selectedQuestIndex]]}
       callback={this.updateQuestion.bind(this)}
       finishQuest={this.finishQuest.bind(this)}
-      totalScore={this.state.totalScore}
-      updateScore={this.updateScore.bind(this)}
+      currentScore={this.state.currentScore}
+      updateCurrentScore={this.updateCurrentScore.bind(this)}
+      updateMaxScore={this.updateMaxScore.bind(this)}
       ref={instance => { this.quizModal = instance; }}
       />
     }

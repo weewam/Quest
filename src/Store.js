@@ -7,7 +7,7 @@ import logger from 'redux-logger';
 import { user } from './reducers/user'
 import { quests } from './reducers/quests'
 import { position } from './reducers/position'
-
+import { score } from './reducers/score'
 const config = {
 	key : 'root',
 	storage : AsyncStorage,
@@ -17,7 +17,8 @@ const config = {
 const reducers = {
   user: user,
   quests: quests,
-  position: position
+  position: position,
+	score: score
 }
 
 const reducer = persistCombineReducers(config, reducers)

@@ -34,6 +34,9 @@ import {
   setQuest,
   setFocusedQuest
 } from '../reducers/quests';
+import {
+  updateFinalScore
+} from '../reducers/score'
 
 //Components
 import Background from '../components/Backgrounds/Background1'
@@ -53,6 +56,10 @@ const mapStateToProps = state => ({
   selectedQuestIndex: state.quests.selectedQuest,
   currentPosition: state.position.coords,
   focusedQuestIndex: state.quests.focusedQuest,
+  // todo: save scores and stars to memory
+  currentScore: state.score.currentScore,
+  currentStar: state.score.currentStar,
+  totalScore: state.score.totalScore,
   userName: state.user.name,
   userAvatar: state.user.avatar,
 })
@@ -60,7 +67,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => bindActionCreators({
   setQuest,
   setPosition,
-  setFocusedQuest
+  setFocusedQuest,
+  updateFinalScore
 }, dispatch)
 
 class HomeScreen extends Component {
@@ -74,6 +82,7 @@ class HomeScreen extends Component {
       error: null,
       geoLocation: "",
     }
+    console.log(this.props)
   }
 
   updateSelectedQuest(i, pos) {
@@ -112,8 +121,6 @@ class HomeScreen extends Component {
       (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
     );
-
-
     const { selectedQuestIndex } = this.props
     this.questScroll.scrollTo({ x: -initScrollPosition + selectedQuestIndex * (buttonWidth + itemSpacing), animated: true })
   }
@@ -145,7 +152,7 @@ class HomeScreen extends Component {
     const geoLocationComponent = (
       <Text style={styles.topBarText}> {this.state.geoLocation} </Text>
     )
-    
+
     const questGalleryList = locations.map(function (item, i) {
       return (
         <QuestGalleryItem key={i} {...item} played={selectedQuestIndex === i} stars={selectedQuestIndex === i} />
@@ -157,7 +164,7 @@ class HomeScreen extends Component {
 
     return (
       <View style={styles.outerContainer}>
-        
+
         <ScrollView snapToInterval={HEIGHT} decelerationRate={ 'fast' } showsVerticalScrollIndicator={ false }>
           <View style={styles.innerContainer}>
             <View style={styles.background}>
@@ -299,7 +306,7 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
-  
+
   sliderItemContainer: {
     paddingBottom: 40,
     backgroundColor: 'rgba(0, 0, 0, 0)',
