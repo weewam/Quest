@@ -90,7 +90,7 @@ class QuestScreen extends Component{
     updateQuestion(correctAnswer){
       if(correctAnswer) {
         this.props.nextQuestion()
-        this.quizModal.resetState()
+        this.quizModal.resetState(locations[this.props.selectedQuestIndex].questions[this.props.selectedQuestion[this.props.selectedQuestIndex]+1][1].length)
       } else{
         this.setModalVisible(!this.state.modalVisible)
         this.props.navigation.navigate("FailedScreen")
