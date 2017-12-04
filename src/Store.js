@@ -4,7 +4,8 @@ import { AsyncStorage } from 'react-native';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
-import { quests } from './reducers/quests';
+import { user } from './reducers/user'
+import { quests } from './reducers/quests'
 import { position } from './reducers/position'
 import { score } from './reducers/score'
 const config = {
@@ -14,6 +15,7 @@ const config = {
 }
 
 const reducers = {
+  user: user,
   quests: quests,
   position: position,
 	score: score
