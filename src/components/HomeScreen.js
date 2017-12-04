@@ -35,6 +35,9 @@ import {
   setFocusedQuest
 } from '../reducers/quests';
 import Swiper from '../reducers/swiper';
+import {
+  updateFinalScore
+} from '../reducers/score'
 
 //Components
 import Background from '../components/Backgrounds/Background1'
@@ -53,12 +56,17 @@ const mapStateToProps = state => ({
   selectedQuestIndex: state.quests.selectedQuest,
   currentPosition: state.position.coords,
   focusedQuestIndex: state.quests.focusedQuest,
+  // todo: save scores and stars to memory
+  currentScore: state.score.currentScore,
+  currentStar: state.score.currentStar,
+  totalScore: state.score.totalScore
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   setQuest,
   setPosition,
-  setFocusedQuest
+  setFocusedQuest,
+  updateFinalScore
 }, dispatch)
 
 class HomeScreen extends Component {
@@ -72,6 +80,7 @@ class HomeScreen extends Component {
       error: null,
       geoLocation: "",
     }
+    console.log(this.props)
   }
 
   updateSelectedQuest(i, pos) {
@@ -150,7 +159,6 @@ class HomeScreen extends Component {
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
     );
 
-    
     const { selectedQuestIndex } = this.props
     this.questScroll.scrollTo({ x: -initScrollPosition + selectedQuestIndex * (buttonWidth + itemSpacing), animated: true })
   }
@@ -210,8 +218,8 @@ class HomeScreen extends Component {
         <View style={styles.background}>
           <Background width={WIDTH + 10} />
         </View>
-        
-        <ScrollView snapToInterval={HEIGHT} decelerationRate={ 'fast' } showsVerticalScrollIndicator={ false }> 
+
+        <ScrollView snapToInterval={HEIGHT} decelerationRate={ 'fast' } showsVerticalScrollIndicator={ false }>
           <View style={styles.topBarContainer}>
             { geoLocationComponent }
           </View>
