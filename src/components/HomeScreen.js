@@ -225,11 +225,17 @@ class HomeScreen extends Component {
 
           <View style={styles.innerContainer}>
             <View style={styles.topBarContainer}>
-              <Text style={styles.topBarText}>{ this.props.userName }</Text>
+              <Text style={[styles.topBarText, { fontSize: 20 }]}>Quest Overview</Text>
             </View>
 
-            <View style={styles.questsOverview}>
-              { questGalleryList }
+            <View style={[styles.content]}>
+              <View style={styles.questsOverview}>
+                { questGalleryList }
+              </View>
+
+              <View style={styles.questOverviewFooter}>
+                <Text style={styles.questOverviewText}>Stockholm</Text>
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -316,9 +322,22 @@ const styles = StyleSheet.create({
   },
 
   questsOverview: {
-    justifyContent: 'center',
+    flex: 1,
+    flexWrap: 'wrap',
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    justifyContent: 'space-between',
+    paddingLeft: 30,
+    paddingRight: 30,
+  },
+  questOverviewFooter: {
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  questOverviewText: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#fff',
   }
 });
 

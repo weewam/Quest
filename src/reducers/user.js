@@ -12,30 +12,6 @@ const initialState = {
 
 export const user = (state = initialState, action) => {
 	switch (action.type) {
-		case 'SET_SELECTED_QUEST':
-			return {
-				...state,
-				selectedQuest: action.selectedId
-			};
-		case 'SET_FOCUSED_QUEST': 
-			return {
-				...state,
-				focusedQuest : action.selectedId
-			};
-		case 'SET_NEXT_QUESTION': 
-			let newSelectedQuestion = state.selectedQuestion.slice();
-			newSelectedQuestion[state.selectedQuest] = action.nextQuestionId;
-			return {
-				...state,
-				selectedQuestion : newSelectedQuestion,
-			};
-		case 'NEXT_QUESTION':
-			let updatedSelectedQuestion = state.selectedQuestion.slice();
-			updatedSelectedQuestion[state.selectedQuest]++;
-			return {
-				...state,
-				selectedQuestion : updatedSelectedQuestion,
-			};
 		default:
 			return state;
 	}
