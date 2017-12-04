@@ -109,8 +109,9 @@ const styles = StyleSheet.create({
   },
   itemText: {
     marginTop: 20,
-    fontSize: 18,
+    fontSize: 14,
     color: 'white',
     fontWeight: 'bold',
+    letterSpacing: 0.25,
   },
 });
