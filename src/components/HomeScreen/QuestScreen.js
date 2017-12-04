@@ -152,82 +152,64 @@ class QuestScreen extends Component{
     }
 
     return (
-      <View style={styles.outerView}>
-        <View style={styles.backButtonView}>
+      <View style={styles.container}>        
+        <View style={styles.backButtonContainer}>
           <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => this.props.navigation.goBack(null)}>
-            <View>
-              <Text style={styles.backButton}>{'<'} Back</Text>
-            </View>
+            <Image style={styles.backButton} source={require('../../icons/arrow-left.png')} />
           </TouchableHighlight>
-
-
         </View>
-        <View style={styles.container}>
-          <Image source={{ uri: selectedQuest.image }} style={[styles.itemImage, { width: IMAGE_SIZE, height: IMAGE_SIZE, borderRadius: IMAGE_SIZE / 2 }]} />
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>{ selectedQuest.name }</Text>
-            <Text style={styles.text}>{ selectedQuest.provider }</Text>
-            <Text style={styles.text}>{ selectedQuest.place }</Text>
-          </View>
-          <View >
 
-            {this.state.showInfo === true && <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => {
-              this.state.questScreenModal = "info"
-              this.setModalVisible(true)
+        <View style={styles.questImageContainer}>
+          <Image style={ styles.questImage } source={{ uri: selectedQuest.image }} />
+        </View>
 
-            }}>
+        <View style={styles.content}>
+          <View>
+            <Text style={styles.questName}>{ selectedQuest.name }</Text>
+            <Text style={styles.questProvider}>{ selectedQuest.provider }</Text>
+
             <View style={styles.buttonContainer}>
-              <Text style={styles.buttonStyle}>
-                {this.renderInfo()}
-              </Text>
-            </View>
-            </TouchableHighlight>
-            }
-
-
-            {this.state.showQuestions === true && <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => {
-              this.state.questScreenModal = "quiz"
-              this.setModalVisible(true)
-
-            }}>
-            <View style={styles.buttonContainer}>
-              <Text style={styles.buttonStyle}>
-                {this.renderQuestions()}
-              </Text>
-            </View>
-            </TouchableHighlight>
-            }
-
-
-          </View>
-          <View style={styles.modalView}>
-            <Modal
-                animationType="fade"
-                transparent={false}
-                visible={this.state.modalVisible}
-                onRequestClose={() => {alert("Modal has been closed.")}}
-                onShow={this.renderText}
-                style={{backgroundColor: 'rgb(215, 150, 140)'}, {width: 200}}
-
-                >
-               <View style={styles.modal}>
-                <View>
-                  <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => {
-                    this.setModalVisible(!this.state.modalVisible)
-                  }}>
-                    <View>
-                      <Text style={styles.closeButton}>X</Text>
-                    </View>
-                  </TouchableHighlight>
+              <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => { this.state.questScreenModal = "info", this.setModalVisible(true) }}>
+                <View style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    {this.renderInfo()}
+                  </Text>
                 </View>
+              </TouchableHighlight>
 
-                { modal }
-
-               </View>
-              </Modal>
+              <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => { this.state.questScreenModal = "quiz", this.setModalVisible(true) }}>
+                <View style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    {this.renderQuestions()}
+                  </Text>
+                </View>
+              </TouchableHighlight>
             </View>
+          </View>
+
+          <View style={styles.questLocationContainer}>
+            <Text style={styles.questLocationText}>{ selectedQuest.place }</Text>
+          </View>
         </View>
 
+        <Modal
+          animationType="fade"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {alert("Modal has been closed.")}}
+          onShow={this.renderText}
+          style={{backgroundColor: 'rgb(215, 150, 140)'}, {width: 200}}>
+
+          <View style={styles.modal}>
+            <View>
+              <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={ () => { this.setModalVisible(!this.state.modalVisible) } }>
+                <Image style={styles.closeButton} source={require('../../icons/cross.png')} />
+              </TouchableHighlight>
+            </View>
+
+            { modal }
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -235,90 +217,108 @@ class QuestScreen extends Component{
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    //justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
-    //paddingTop: WIDTH*0.05,
-    backgroundColor: 'rgb(215, 150, 140)',
-  },
   outerView: {
     flex: 1,
-    //justifyContent: 'center',
-    //alignItems: 'center',
-    //flexDirection: 'column',
-    paddingTop: WIDTH*0.05,
     backgroundColor: 'rgb(215, 150, 140)',
-  },
-  modalView: {
-    backgroundColor: 'rgb(215, 150, 140)',
-    width: WIDTH,
-    height: HEIGHT,
   },
   modal: {
     backgroundColor: 'rgb(215, 150, 140)',
     width: WIDTH,
     height: HEIGHT,
     paddingTop: 20,
-
-  },
-  textContainer: {
-    alignItems: 'center',
-    flexDirection: 'column',
-    marginTop: 20,
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    flexDirection: 'column',
-    shadowRadius: 5,
-    shadowColor: 'black',
-    shadowOffset: { height: 0, width: 0 },
-    borderWidth: 2,
-    borderColor: 'white',
-    borderRadius: 5,
-    width: WIDTH*0.5,
-    paddingTop: 7.5,
-    paddingBottom: 7.5,
-    marginTop: 10,
-
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: '500',
-    color: 'white',
   },
   closeButton: {
-    fontSize: 30,
-    color: 'white',
-    marginLeft: 15,
-    marginTop: 10,
-  },
-  description: {
-    fontSize: 20,
-    textAlign: 'center',
+    width: 20,
+    height: 20,
     margin: 10,
   },
-  itemImage: {
-    marginTop: HEIGHT*0.05,
-  },
-  backButtonView: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-  },
-  buttonStyle: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: 'white',
+
+
+  backButtonContainer: {
+    position: 'absolute',
+    top: 20,
+    zIndex: 1,
   },
   backButton: {
-    fontSize: 20,
-    fontWeight: '500',
-    color: 'white',
-    marginLeft: 10,
+    width: 20,
+    height: 20,
+    margin: 10,
+  },
+
+  questImageContainer: {
+    position: 'absolute',
+    width: WIDTH,
+    height: HEIGHT,
+    backgroundColor: 'rgba(38, 40, 50, 1)',
+  },
+  questImage: {
+    position: 'absolute',
+    top: 0,
+    left: -(HEIGHT - WIDTH)/2,
+
+    width: HEIGHT,
+    height: HEIGHT,
+    opacity: 0.5,
+  },
+
+  content: {
+    height: HEIGHT,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+  },
+  questName: {
+    fontSize: 24,
+    color: '#fff',
+    textAlign: 'center',
+    fontFamily: "Montserrat-Bold",
+    letterSpacing: 0.25,
+  },
+  questProvider: {
     marginTop: 10,
 
-  }
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'center',
+    fontFamily: "Montserrat-SemiBold",
+    letterSpacing: 0.25,
+  },
+  
+  buttonContainer: {
+    marginTop: 20,
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    shadowRadius: 15,
+    shadowColor: 'rgb(215, 150, 140)',
+    shadowOffset: { height: 3, width: 0 },
+
+    width: WIDTH*0.5,
+    height: 46,
+    marginTop: 15,
+    borderRadius: 25,
+    backgroundColor: 'rgb(215, 150, 140)',
+  },
+  buttonText: {
+    fontSize: 16,
+    lineHeight: 16,
+    color: 'white',
+    fontFamily: "Montserrat-SemiBold",
+  },
+
+  questLocationContainer: {
+    position: 'absolute',
+    bottom: 25,
+  },
+  questLocationText: {
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'center',
+    fontFamily: "Montserrat-SemiBold",
+    letterSpacing: 0.25,
+  },
 });
 
 

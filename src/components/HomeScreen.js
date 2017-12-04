@@ -214,7 +214,9 @@ class HomeScreen extends Component {
               </View>
 
               <View style={styles.questOverviewFooter}>
+                <Image style={styles.questOverviewArrow} source={require('../icons/arrow-left.png')} />
                 <Text style={styles.questOverviewText}>Stockholm</Text>
+                <Image style={styles.questOverviewArrow} source={require('../icons/arrow-right.png')} />
               </View>
             </View>
           </View>
@@ -326,13 +328,23 @@ const styles = StyleSheet.create({
   },
   questOverviewFooter: {
     height: 60,
+    paddingLeft: 30,
+    paddingRight: 30,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
   },
   questOverviewText: {
+    flex: 1,
     fontSize: 18,
     fontFamily: "Montserrat-SemiBold",
     color: '#fff',
+    textAlign: 'center',
+  },
+  questOverviewArrow: {
+    width: 20,
+    height: 20,
+    opacity: 0.25,
   }
 });
 
