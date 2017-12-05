@@ -19,6 +19,7 @@ import { locations } from '../../data/locations';
 
 import InfoModal from './InfoModal';
 import QuizModal from './QuizModal';
+import ClueModal from './ClueModal';
 
 import {
   setQuest,
@@ -62,7 +63,19 @@ class QuestScreen extends Component{
     constructor(props) {
         super(props)
         this.state.showInfo = locations[this.props.selectedQuestIndex].about != null
-        this.state.showQuestions = locations[this.props.selectedQuestIndex].questions != null
+        // according to the types of question to show different buttons and access data
+        this.state.showType = locations[this.props.selectedQuestIndex].type
+        switch(this.state.showType){
+          case "QUIZ":
+            this.state.showQuestions = locations[this.props.selectedQuestIndex].questions != null
+            break
+          case "CLUE":
+            this.state.showQuestions = locations[this.props.selectedQuestIndex].clues != null
+            break
+          default:
+            this.state.showType = null
+        }
+
      }
     state = {
       modalVisible: false,
@@ -76,21 +89,72 @@ class QuestScreen extends Component{
     setModalVisible(visible) {
       this.setState({modalVisible: visible});
     }
-    renderInfo() {
+
+    renderTemplate(modalName, textName, modal){
       return (
-        <Text>INFO</Text>
-        )
+        <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => { this.state.questScreenModal = {modalName}, this.setModalVisible(true) }}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>
+              <Text>{textName}</Text>
+            </Text>
+          </View>
+        </TouchableHighlight>
+      )
     }
-    renderQuestions() {
-      return (
-        <Text>QUIZ</Text>
+
+    renderInfo() {
+      if(this.state.showInfo!=null){
+        return (<TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => { this.state.questScreenModal = "info", this.setModalVisible(true) }}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>
+              <Text>INFO</Text>
+            </Text>
+          </View>
+        </TouchableHighlight>)
+      }
+    }
+
+    renderQuestions(modal) {
+      switch(this.state.showType){
+      case "QUIZ":
+        return (
+          <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => { this.state.questScreenModal = "quiz", this.setModalVisible(true) }}>
+            <View style={styles.button}>
+              <Text style={styles.buttonText}>
+                <Text>QUIZ</Text>
+              </Text>
+            </View>
+          </TouchableHighlight>
         )
+      case "CLUE":
+        return (
+          <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => { this.state.questScreenModal = "clue", this.setModalVisible(true) }}>
+            <View style={styles.button}>
+              <Text style={styles.buttonText}>
+                <Text>SOLVE THE CLUES</Text>
+              </Text>
+            </View>
+          </TouchableHighlight>
+        )
+      default:
+      return;
+      }
     }
 
     updateQuestion(correctAnswer){
       if(correctAnswer) {
         this.props.nextQuestion()
-        this.quizModal.resetState(locations[this.props.selectedQuestIndex].questions[this.props.selectedQuestion[this.props.selectedQuestIndex]+1][1].length)
+        switch(this.state.type){
+          // get potential scores
+          case "QUIZ":
+            // based on the nubmer of options
+            this.quizModal.resetState(locations[this.props.selectedQuestIndex].questions[this.props.selectedQuestion[this.props.selectedQuestIndex]+1][1].length)
+            break
+          case "CLUE":
+            // based on the number of characters of the answer
+            this.clueModal.resetState(locations[this.props.selectedQuestIndex].clues[this.props.selectedQuestion[this.props.selectedQuestIndex]+1][2].length)
+            break
+        }
       } else{
         this.setModalVisible(!this.state.modalVisible)
         this.props.navigation.navigate("FailedScreen")
@@ -103,7 +167,6 @@ class QuestScreen extends Component{
       this.setModalVisible(!this.state.modalVisible)
       this.updateCurrentScore(score)
       if(success) {
-        // console.log("updateFinalScore:", this.state.currentScore, this.state.maxScore)
         if(this.state.currentScore/this.state.maxScore >= 0.66){
           this.props.updateFinalScore(this.state.currentScore, 3)
         } else if(this.state.currentScore/this.state.maxScore < 0.33){
@@ -132,7 +195,6 @@ class QuestScreen extends Component{
     const selectedQuest = locations[selectedQuestIndex];
 
     let modal = null;
-
     if (this.state.questScreenModal === "info") {
       modal = <InfoModal selectedQuest={locations[this.props.selectedQuestIndex]}/>
     }
@@ -147,12 +209,26 @@ class QuestScreen extends Component{
       currentScore={this.state.currentScore}
       updateCurrentScore={this.updateCurrentScore.bind(this)}
       updateMaxScore={this.updateMaxScore.bind(this)}
+      ref={instance => { this.clueModal = instance; }}
+      />
+    }
+
+    if (this.state.questScreenModal === "clue") {
+      modal =
+      <ClueModal
+      lastQuestion={selectedQuestion[this.props.selectedQuestIndex] === (locations[this.props.selectedQuestIndex].clues.length-1)}
+      selectedQuestion={locations[this.props.selectedQuestIndex].clues[this.props.selectedQuestion[this.props.selectedQuestIndex]]}
+      callback={this.updateQuestion.bind(this)}
+      finishQuest={this.finishQuest.bind(this)}
+      currentScore={this.state.currentScore}
+      updateCurrentScore={this.updateCurrentScore.bind(this)}
+      updateMaxScore={this.updateMaxScore.bind(this)}
       ref={instance => { this.quizModal = instance; }}
       />
     }
 
     return (
-      <View style={styles.container}>        
+      <View style={styles.container}>
         <View style={styles.backButtonContainer}>
           <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => this.props.navigation.goBack(null)}>
             <Image style={styles.backButton} source={require('../../icons/arrow-left.png')} />
@@ -169,21 +245,8 @@ class QuestScreen extends Component{
             <Text style={styles.questProvider}>{ selectedQuest.provider }</Text>
 
             <View style={styles.buttonContainer}>
-              <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => { this.state.questScreenModal = "info", this.setModalVisible(true) }}>
-                <View style={styles.button}>
-                  <Text style={styles.buttonText}>
-                    {this.renderInfo()}
-                  </Text>
-                </View>
-              </TouchableHighlight>
-
-              <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => { this.state.questScreenModal = "quiz", this.setModalVisible(true) }}>
-                <View style={styles.button}>
-                  <Text style={styles.buttonText}>
-                    {this.renderQuestions()}
-                  </Text>
-                </View>
-              </TouchableHighlight>
+              {this.renderInfo()}
+              {this.renderQuestions(modal)}
             </View>
           </View>
 
@@ -283,7 +346,7 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-SemiBold",
     letterSpacing: 0.25,
   },
-  
+
   buttonContainer: {
     marginTop: 20,
   },
