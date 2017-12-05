@@ -15,51 +15,115 @@ class ClueModal extends Component{
   constructor(props) {
       super(props)
       this.state = {
-        selectedAnswer: false,
-        selectedOptions: [],
-        score: this.props.selectedQuestion[2].length
+        selectedAnswer: [],
+        selectedIndex: [],
+        characterSet: [],
+        score: this.props.selectedQuestion[2].length,
+        showAnswer: false,
+        characters: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+      'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
       };
       this.props.updateMaxScore(this.props.selectedQuestion[2].length)
+      this.getCharacterSet()
   }
 
   resetState(potentialScore){
     this.setState({
-      selectedAnswer: false,
-      selectedOptions: [],
-      score: potentialScore
+      selectedAnswer: [],
+      selectedIndex: [],
+      characterSet: [],
+      score: potentialScore,
+      showAnswer: false
     })
     this.props.updateMaxScore(potentialScore)
+    this.getCharacterSet()
+  }
+
+  checkAnswer(){
+    for(i = 0; i < this.props.selectedQuestion[2].length; i++){
+      if(this.state.selectedAnswer[i] !== this.props.selectedQuestion[2][i]){
+        return false
+      }
+    }
+    return true
   }
 
   calScore(){
-    if(this.state.selectedAnswer === this.props.selectedQuestion[2]){
+    if(this.checkAnswer()){
       this.props.updateCurrentScore(this.state.score)
-      this.props.callback((this.state.selectedAnswer === this.props.selectedQuestion[2]));
+      this.props.callback((true));
     } else{
-      this.setState({selectedOptions:[...this.state.selectedOptions, this.state.selectedAnswer]});
-      this.state.score -= 1
+      this.state.selectedAnswer.length = 0
+      this.state.selectedIndex.length = 0
+      if(this.state.score === 0){
+        // show the answer and let the player pass
+        this.state.showAnswer = true
+        this.state.selectedAnswer.length = 0
+        for(i = 0; i < this.props.selectedQuestion[2].length; i++){
+          this.state.selectedAnswer[i] = this.props.selectedQuestion[2][i]
+        }
+      } else {
+        this.state.score -= 1
+      }
     }
-    this.setState({selectedAnswer: false});
   }
 
+  getCharacterSet(){
+    // generate character set
+    // random generate 15 characters\
+    for(i = 0; i < 5; i++){
+      this.state.characterSet.push(this.state.characters[Math.floor((Math.random()*10)%this.state.characters.length)])
+    }
+    // append the answer characters
+    for(i = 0; i < this.props.selectedQuestion[2].length; i++){
+      this.state.characterSet.push(this.props.selectedQuestion[2][i])
+    }
+    // shuffle
+    for (let i = this.state.characterSet.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [this.state.characterSet[i], this.state.characterSet[j]] =
+        [this.state.characterSet[j], this.state.characterSet[i]]
+    }
+  }
   onPress() {
     //alert("selectedAnswer: " + this.state.selectedAnswer + "\n" +
     //      "CorrectAnswer: " + this.props.selectedQuestion[2] + "\n" +
     //      "Correct answer: " + (this.state.selectedAnswer === this.props.selectedQuestion[2]))
-    if(this.state.selectedAnswer !== false) {
+    if(this.state.selectedAnswer.length === this.props.selectedQuestion[2].length) {
       this.calScore()
     } else {
       alert("Select an answer")
     }
 
   }
-  selectAnswer(guess) {
-    this.setState({ selectedAnswer: guess });
+
+  selectAnswer(guessIndex) {
+    // if(this.state.selectedIndex.indexOf(guessIndex) === -1 &&
+    if(this.state.selectedAnswer.length < this.props.selectedQuestion[2].length){
+      this.setState({
+        selectedAnswer: [...this.state.selectedAnswer, this.state.characterSet[guessIndex]],
+        selectedIndex: [...this.state.selectedIndex, guessIndex]
+      }, () => {
+        this.render()
+      });
+    }
   }
+
+  deleteAnswer(deleteIndex) {
+    this.state.selectedAnswer.splice(deleteIndex, 1)
+    this.state.selectedIndex.splice(deleteIndex, 1)
+    this.setState({
+      selectedAnswer: [...this.state.selectedAnswer],
+      selectedIndex: [...this.state.selectedIndex]
+    }, function() {
+      this.render()
+    });
+  }
+
   finishQuest() {
-    if(this.state.selectedAnswer !== false && (this.state.selectedAnswer === this.props.selectedQuestion[2])) {
+    if(this.checkAnswer()) {
       this.props.finishQuest(true, this.state.score)
-    } else if(this.state.selectedAnswer !== false) {
+    } else if(this.state.selectedAnswer.length === this.props.selectedQuestion[2].length) {
       this.calScore()
     }
     else {
@@ -70,14 +134,36 @@ class ClueModal extends Component{
 
   render() {
     const {selectedQuestion, lastQuestion} = this.props;
-    const answerList = selectedQuestion[1].map(
+    const answers = this.state.selectedAnswer.map(
+      function(item, i) {
+        // return (
+        //   <TouchableHighlight key={"answer"+i} underlayColor='rgba(0, 0, 0, 0)'
+        //   disabled={!this.state.showAnswer}
+        //   onPress={ this.deleteAnswer.bind(this, i)} >
+        //     <View style={{backgroundColor: 'rgba(0,0,0,0)'}}>
+        //       <Text style={styles.answerItemTextSelected}>{ `${item}`}</Text>
+        //     </View>
+        //   </TouchableHighlight>
+        // )
+        return (
+          <TouchableHighlight key={"answer"+i} underlayColor='rgba(0, 0, 0, 0)'
+          onPress={ this.deleteAnswer.bind(this, i)}
+          disabled={!this.state.showAnswer} >
+            <View style={{backgroundColor: 'rgba(0,0,0,1)'}}>
+              <Text style={styles.answerItemTextSelected}>{ `${item}`}</Text>
+            </View>
+          </TouchableHighlight>
+        )
+    }.bind(this))
+    const answerList = this.state.characterSet.map(
           function (item, i) {
+            disabled = this.state.selectedIndex.indexOf(i) !== -1? true : false
             return (
-              <TouchableHighlight key={i} underlayColor='rgba(0, 0, 0, 0)'
-              onPress={ this.selectAnswer.bind(this, i)}
-              disabled={this.state.selectedOptions.indexOf(i) !== -1} >
-                <View style={{backgroundColor: this.state.selectedOptions.indexOf(i) !== -1 ? 'rgba(0,0,0,0.5)':'rgba(0,0,0,0)'}}>
-                  <Text style={(this.state.selectedAnswer === i) ? styles.answerItemTextSelected : styles.answerItemText}>{ `${i+1}. ${item} \n`}</Text>
+              <TouchableHighlight key={"list"+i} underlayColor='rgba(0, 0, 0, 0)'
+              onPress={this.selectAnswer.bind(this, i)}
+              disabled={disabled}>
+                <View style={{backgroundColor: disabled ? 'rgba(0,0,0,0.5)':'rgba(0,0,0,0)'}}>
+                  <Text style={disabled ? styles.answerItemTextSelected : styles.answerItemText}>{`${item}`}</Text>
                 </View>
               </TouchableHighlight>
             )
@@ -112,9 +198,9 @@ class ClueModal extends Component{
       <View style={styles.quizContainer}>
         <View style={styles.quiz}>
           <Text style={styles.questionText}>
-            {selectedQuestion[0] + "\n"}
+            {selectedQuestion[1] + "\n"}
           </Text>
-
+            {answers}
             {answerList}
 
         </View>
