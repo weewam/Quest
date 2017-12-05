@@ -33,16 +33,12 @@ import {
 
 //Contants
 const WIDTH = Dimensions.get('window').width,
-  HEIGHT = Dimensions.get('window').height,
-  IMAGE_SIZE = WIDTH*0.7,
-  ANSWERS = 1,
-  QUESTIONS = 0;
+  HEIGHT = Dimensions.get('window').height;
 
 
 const mapStateToProps = state => ({
   selectedQuestIndex: state.quests.selectedQuest,
   currentPosition: state.position.coords,
-  focusedQuestIndex: state.quests.focusedQuest,
   selectedQuestion: state.quests.selectedQuestion,
   // todo: save scores and stars to memory
   currentScore: state.score.currentScore,
@@ -75,16 +71,6 @@ class QuestScreen extends Component{
 
     setModalVisible(visible) {
       this.setState({modalVisible: visible});
-    }
-    renderInfo() {
-      return (
-        <Text>INFO</Text>
-        )
-    }
-    renderQuestions() {
-      return (
-        <Text>QUIZ</Text>
-        )
     }
 
     updateQuestion(correctAnswer){
@@ -171,17 +157,13 @@ class QuestScreen extends Component{
             <View style={styles.buttonContainer}>
               <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => { this.state.questScreenModal = "info", this.setModalVisible(true) }}>
                 <View style={styles.button}>
-                  <Text style={styles.buttonText}>
-                    {this.renderInfo()}
-                  </Text>
+                  <Text style={styles.buttonText}>INFO</Text>
                 </View>
               </TouchableHighlight>
 
               <TouchableHighlight underlayColor='rgba(0, 0, 0, 0)' onPress={() => { this.state.questScreenModal = "quiz", this.setModalVisible(true) }}>
                 <View style={styles.button}>
-                  <Text style={styles.buttonText}>
-                    {this.renderQuestions()}
-                  </Text>
+                  <Text style={styles.buttonText}>QUIZ</Text>
                 </View>
               </TouchableHighlight>
             </View>
