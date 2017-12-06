@@ -144,24 +144,12 @@ class QuestScreen extends Component{
     updateQuestion(correctAnswer){
       if(correctAnswer) {
         this.props.nextQuestion()
-        switch(this.state.type){
-          // get potential scores
-          case "QUIZ":
-            // based on the nubmer of options
-            this.quizModal.resetState(locations[this.props.selectedQuestIndex].questions[this.props.selectedQuestion[this.props.selectedQuestIndex]+1][1].length)
-            break
-          case "CLUE":
-            // based on the number of characters of the answer
-            this.clueModal.resetState(locations[this.props.selectedQuestIndex].clues[this.props.selectedQuestion[this.props.selectedQuestIndex]+1][2].length)
-            break
-        }
       } else{
         this.setModalVisible(!this.state.modalVisible)
         this.props.navigation.navigate("FailedScreen")
         this.props.setNextQuestion(0)
       }
     }
-
 
     finishQuest(success, score) {
       this.setModalVisible(!this.state.modalVisible)
@@ -209,7 +197,6 @@ class QuestScreen extends Component{
       currentScore={this.state.currentScore}
       updateCurrentScore={this.updateCurrentScore.bind(this)}
       updateMaxScore={this.updateMaxScore.bind(this)}
-      ref={instance => { this.clueModal = instance; }}
       />
     }
 
@@ -223,7 +210,6 @@ class QuestScreen extends Component{
       currentScore={this.state.currentScore}
       updateCurrentScore={this.updateCurrentScore.bind(this)}
       updateMaxScore={this.updateMaxScore.bind(this)}
-      ref={instance => { this.quizModal = instance; }}
       />
     }
 
