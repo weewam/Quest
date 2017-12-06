@@ -76,6 +76,7 @@ class ClueModal extends Component{
           score: this.state.score-1
         }, function() {
           this.render()
+          alert("wrong answer")
         });
       }
   }
@@ -156,6 +157,7 @@ class ClueModal extends Component{
       function(i) {
         return (
           <TouchableHighlight key={"answer"+i} underlayColor='rgba(0, 0, 0, 0)'
+          style={styles.touchHighlight}
           onPress={ this.deleteAnswer.bind(this, i)}
           disabled={this.state.showAnswer} >
             <View style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
@@ -171,6 +173,7 @@ class ClueModal extends Component{
             disabled = this.state.showAnswer? true : disabled
             return (
               <TouchableHighlight key={"list"+i} underlayColor='rgba(0, 0, 0, 0)'
+              style={styles.touchHighlight}
               onPress={this.selectAnswer.bind(this, i)}
               disabled={disabled}>
                 <View>
@@ -211,7 +214,7 @@ class ClueModal extends Component{
           <Text style={styles.questionText}>
             {selectedQuestion[1] + "\n"}
           </Text>
-          <View style={styles.buttonHorizon}>
+          <View style={styles.buttonAnswer}>
             {answers}
           </View>
           {(lastQuestion) ? finishButton : nextButton}
@@ -281,10 +284,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: 'transparent',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    paddingTop: 10,
-    paddingLeft: 10,
+    paddingTop: 5,
+    paddingLeft: 5,
+    paddingBottom: 5,
+    paddingRight: 5,
     textAlignVertical: "center",
-    textAlign: "center"
+    textAlign: 'center',
+    height: 35
   },
   answerItemTextSelected: {
     fontWeight: '500',
@@ -294,10 +300,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: 'transparent',
     backgroundColor: 'rgba(0, 0, 0, 0)',
-    paddingTop: 10,
-    paddingLeft: 10,
+    paddingTop: 5,
+    paddingLeft: 5,
+    paddingBottom: 5,
+    paddingRight: 5,
     textAlignVertical: "center",
-    textAlign: "center"
+    textAlign: "center",
+    height: 35
   },
   buttonStyle: {
     fontSize: 18,
@@ -312,11 +321,22 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
+  buttonAnswer: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 10, /* Some padding */
+    justifyContent: 'center',
+  },
   buttonHorizon: {
     flex: 1,
     flexDirection: 'row',
     padding: 10, /* Some padding */
-    justifyContent: 'space-around'
+    justifyContent: 'center'
+  },
+  touchHighlight: {
+    borderColor: 'rgba(0,0,0,0)',
+    borderWidth: 2,
+    width: 30,
   }
 });
 
