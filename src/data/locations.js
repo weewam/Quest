@@ -118,7 +118,7 @@ export const locations = [
 		clues: [
 			[1, "What's the name of this country?", "Sweden"],
 			[1, "The famous Swedish furniture company", "IKEA"],
-			[1, "The famous Swedish cars manufacturers", "volovo"]
+			[1, "The famous Swedish cars manufacturers", "volvo"]
 		],
 		rewards: [],
 	},

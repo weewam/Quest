@@ -58,9 +58,11 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 class QuestScreen extends Component{
     constructor(props) {
         super(props)
+        this.state.index = this.props.selectedQuestIndex
         this.state.showInfo = locations[this.props.selectedQuestIndex].about != null
         // according to the types of question to show different buttons and access data
         this.state.showType = locations[this.props.selectedQuestIndex].type
+        this.state.finish = false
         switch(this.state.showType){
           case "QUIZ":
             this.state.showQuestions = locations[this.props.selectedQuestIndex].questions != null
@@ -69,7 +71,7 @@ class QuestScreen extends Component{
             this.state.showQuestions = locations[this.props.selectedQuestIndex].clues != null
             break
           default:
-            this.state.showType = null
+            this.state.showQuestions = false
         }
 
      }
@@ -80,6 +82,23 @@ class QuestScreen extends Component{
       questScreenModal: null,
       currentScore: 0,
       maxScore: 0
+    }
+
+    componentWillReceiveProps(nextProps){
+      if(this.state.finish){
+        this.setState(
+          {
+            index: nextProps.selectedQuestIndex,
+            showInfo: locations[nextProps.selectedQuestIndex].about,
+            showType: locations[nextProps.selectedQuestIndex].type,
+            showQuestions: false,
+            finish: false
+          }
+          // , function(){
+          //   console.log("Props:",this.state)
+          // }
+        )
+      }
     }
 
     setModalVisible(visible) {
@@ -162,8 +181,11 @@ class QuestScreen extends Component{
       } else {
         this.props.navigation.navigate("FailedScreen")
       }
-      this.props.setNextQuestion(0)
-
+      this.setState({
+        finish: true
+      }, function(){
+        this.props.setNextQuestion(0)
+      })
     }
 
     updateCurrentScore(currentScore){
@@ -177,17 +199,17 @@ class QuestScreen extends Component{
    render() {
     const { selectedQuestIndex, currentPosition, selectedQuestion } = this.props
     const selectedQuest = locations[selectedQuestIndex];
-
+    // alert(this.state.questScreenModal, JSON.stringify(selectedQuest))
     let modal = null;
     if (this.state.questScreenModal === "info") {
-      modal = <InfoModal selectedQuest={locations[this.props.selectedQuestIndex]}/>
+      modal = <InfoModal selectedQuest={locations[this.state.index]}/>
     }
 
     if (this.state.questScreenModal === "quiz") {
       modal =
       <QuizModal
-      lastQuestion={selectedQuestion[this.props.selectedQuestIndex] === (locations[this.props.selectedQuestIndex].questions.length-1)}
-      selectedQuestion={locations[this.props.selectedQuestIndex].questions[this.props.selectedQuestion[this.props.selectedQuestIndex]]}
+      lastQuestion={selectedQuestion[this.state.index] === (locations[this.state.index].questions.length-1)}
+      selectedQuestion={locations[this.state.index].questions[this.props.selectedQuestion[this.state.index]]}
       callback={this.updateQuestion.bind(this)}
       finishQuest={this.finishQuest.bind(this)}
       currentScore={this.state.currentScore}
@@ -199,8 +221,8 @@ class QuestScreen extends Component{
     if (this.state.questScreenModal === "clue") {
       modal =
       <ClueModal
-      lastQuestion={selectedQuestion[this.props.selectedQuestIndex] === (locations[this.props.selectedQuestIndex].clues.length-1)}
-      selectedQuestion={locations[this.props.selectedQuestIndex].clues[this.props.selectedQuestion[this.props.selectedQuestIndex]]}
+      lastQuestion={selectedQuestion[this.state.index] === (locations[this.state.index].clues.length-1)}
+      selectedQuestion={locations[this.state.index].clues[this.props.selectedQuestion[this.state.index]]}
       callback={this.updateQuestion.bind(this)}
       finishQuest={this.finishQuest.bind(this)}
       currentScore={this.state.currentScore}

@@ -19,6 +19,7 @@ class ClueModal extends Component{
         selectedAnswer: {},
         selectedEmpty: {},
         selectedIndex: [],
+        selectedPosition: {},
         characterSet: [],
         score: this.props.selectedQuestion[2].length,
         showAnswer: false,
@@ -35,6 +36,7 @@ class ClueModal extends Component{
       selectedAnswer: {},
       selectedEmpty: {},
       selectedIndex: [],
+      selectedPosition: {},
       characterSet: [],
       score: nextProps.selectedQuestion[2].length,
       showAnswer: false
@@ -73,6 +75,7 @@ class ClueModal extends Component{
         this.setState({
           selectedAnswer: Object.assign(this.state.selectedAnswer, this.state.selectedEmpty),
           selectedIndex: [],
+          selectedPosition: {},
           score: this.state.score-1
         }, function() {
           this.render()
@@ -116,6 +119,7 @@ class ClueModal extends Component{
       for(i = 0; i < this.props.selectedQuestion[2].length; i++){
         if(this.state.selectedAnswer[i.toString()] === ""){
           this.state.selectedAnswer[i.toString()] = this.state.characterSet[guessIndex]
+          this.state.selectedPosition[i.toString()] = guessIndex
           break
         }
       }
@@ -129,7 +133,8 @@ class ClueModal extends Component{
 
   deleteAnswer(deleteIndex) {
     this.state.selectedAnswer[deleteIndex.toString()] = ""
-    this.state.selectedIndex.splice(deleteIndex, 1)
+    this.state.selectedIndex.splice(this.state.selectedIndex.indexOf(this.state.selectedPosition[deleteIndex.toString()]), 1)
+    this.state.selectedPosition[deleteIndex.toString()] = ""
     this.setState({
       selectedIndex: [...this.state.selectedIndex]
     }, function() {
@@ -320,6 +325,8 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 10,
     paddingRight: 10,
+    textAlignVertical: "center",
+    textAlign: "center"
   },
   buttonAnswer: {
     flex: 1,
