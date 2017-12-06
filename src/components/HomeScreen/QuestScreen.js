@@ -34,16 +34,12 @@ import {
 
 //Contants
 const WIDTH = Dimensions.get('window').width,
-  HEIGHT = Dimensions.get('window').height,
-  IMAGE_SIZE = WIDTH*0.7,
-  ANSWERS = 1,
-  QUESTIONS = 0;
+  HEIGHT = Dimensions.get('window').height;
 
 
 const mapStateToProps = state => ({
   selectedQuestIndex: state.quests.selectedQuest,
   currentPosition: state.position.coords,
-  focusedQuestIndex: state.quests.focusedQuest,
   selectedQuestion: state.quests.selectedQuestion,
   // todo: save scores and stars to memory
   currentScore: state.score.currentScore,
@@ -226,7 +222,7 @@ class QuestScreen extends Component{
         </View>
 
         <View style={styles.content}>
-          <View>
+          <View style={styles.centerContent}>
             <Text style={styles.questName}>{ selectedQuest.name }</Text>
             <Text style={styles.questProvider}>{ selectedQuest.provider }</Text>
 
@@ -316,6 +312,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0)',
   },
+  centerContent: {
+    alignItems: 'center',
+  },
   questName: {
     fontSize: 24,
     color: '#fff',
@@ -340,15 +339,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
 
-    shadowRadius: 15,
-    shadowColor: 'rgb(215, 150, 140)',
-    shadowOffset: { height: 3, width: 0 },
-
     width: WIDTH*0.5,
     height: 46,
     marginTop: 15,
     borderRadius: 25,
     backgroundColor: 'rgb(215, 150, 140)',
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 15,
   },
   buttonText: {
     fontSize: 16,
