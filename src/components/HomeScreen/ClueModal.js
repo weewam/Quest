@@ -15,6 +15,7 @@ class ClueModal extends Component{
   constructor(props) {
       super(props)
       this.state = {
+        answer: this.props.selectedQuestion[2],
         selectedAnswer: {},
         selectedEmpty: {},
         selectedIndex: [],
@@ -25,21 +26,21 @@ class ClueModal extends Component{
       'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
       };
       this.props.updateMaxScore(this.props.selectedQuestion[2].length)
-      this.getCharacterSet(this.props)
+      this.getCharacterSet()
   }
 
   componentWillReceiveProps(nextProps){
-    alert(JSON.stringify(nextProps))
     this.setState({
+      answer: nextProps.selectedQuestion[2],
       selectedAnswer: {},
       selectedEmpty: {},
       selectedIndex: [],
       characterSet: [],
       score: nextProps.selectedQuestion[2].length,
       showAnswer: false
-    }, function(nextProps){
-      this.props.updateMaxScore(this.props.selectedQuestion[2].length)
-      this.getCharacterSet(nextProps)
+    }, function(){
+      this.props.updateMaxScore(this.state.answer.length)
+      this.getCharacterSet()
     })
   }
 
@@ -65,7 +66,6 @@ class ClueModal extends Component{
           showAnswer: true,
           score: 0
         }, function() {
-
           this.render()
         });
 
@@ -80,15 +80,15 @@ class ClueModal extends Component{
       }
   }
 
-  getCharacterSet(nextProps){
+  getCharacterSet(){
     // generate character set
-    // random generate 15 characters\
+    // random generate 15 characters
     for(i = 0; i < 5; i++){
       this.state.characterSet.push(this.state.characters[Math.floor((Math.random()*10)%this.state.characters.length)])
     }
     // append the answer characters
-    for(i = 0; i < this.props.selectedQuestion[2].length; i++){
-      this.state.characterSet.push(this.props.selectedQuestion[2][i])
+    for(i = 0; i < this.state.answer.length; i++){
+      this.state.characterSet.push(this.state.answer[i])
       this.state.selectedEmpty[i.toString()] = ""
     }
     Object.assign(this.state.selectedAnswer, this.state.selectedEmpty)
@@ -98,7 +98,9 @@ class ClueModal extends Component{
         [this.state.characterSet[i], this.state.characterSet[j]] =
         [this.state.characterSet[j], this.state.characterSet[i]]
     }
+    this.forceUpdate()
   }
+
   onPress() {
     if(this.state.selectedIndex.length === this.props.selectedQuestion[2].length) {
       this.calScore()
