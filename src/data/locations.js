@@ -9,6 +9,8 @@ export const locations = [
 		coords: { lat: 59.323376, long: 18.096395 },
 		playable: 1,
 		about: "Experience the joyful and magical world of Gröna Lund, Stockholm´s amusement park. A day spent at Gröna Lund is a memorable one, whether you dine in one of the restaurants, enjoy a pentathlon, a live concert or one of the 30 exciting rides. Gröna Lund is open from late spring (April/March) to September.",
+		// QUIZ: questions, CLUE: clues, HUNT: treasure hunt
+		type: "QUIZ",
 		// Questions format: [[Question][Answer1, Answer2, ..., AnswerK], CorrectAnswerIndex]
 		questions:
 		[
@@ -109,6 +111,15 @@ export const locations = [
 		image: 'https://i.imgur.com/2GqdXRf.jpg',
 		coords: { lat: 59.333184, long: 18.076914 },
 		playable: 1,
+		about: "Take a day trip to Drottningholm and experience a historic milieu of the highest standard. Drottningholm Palace is Sweden's best preserved royal palace constructed in the seventeenth century, the permanent residence of the royal family and one of Stockholm's three World Heritage Sites.",
+		// QUIZ: questions, CLUE: clues, HUNT: treasure hunt
+		type: "CLUE",
+		// Clue fromat [[type of question 1: string, 2: graph], question, answer]
+		clues: [
+			[1, "What's the name of this country?", "Sweden"],
+			[1, "The famous Swedish furniture company", "IKEA"],
+			[1, "The famous Swedish cars manufacturers", "volovo"]
+		],
 		rewards: [],
 	},
 	{
