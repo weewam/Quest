@@ -60,6 +60,7 @@ const mapStateToProps = state => ({
   currentScore: state.score.currentScore,
   currentStar: state.score.currentStar,
   totalScore: state.score.totalScore,
+  starList: state.score.starList,
   userName: state.user.name,
   userAvatar: state.user.avatar,
 })
@@ -82,7 +83,6 @@ class HomeScreen extends Component {
       error: null,
       geoLocation: "",
     }
-    console.log(this.props)
   }
 
   updateSelectedQuest(i, pos) {
@@ -154,8 +154,10 @@ class HomeScreen extends Component {
     )
 
     const questGalleryList = locations.map(function (item, i) {
+      console.log("stars:",this.props.starList[i])
       return (
-        <QuestGalleryItem key={i} {...item} played={selectedQuestIndex === i} stars={selectedQuestIndex === i} />
+        <QuestGalleryItem key={i} {...item} played={selectedQuestIndex === i} stars={selectedQuestIndex === i}
+        starNumber={this.props.starList[i]} totalScore={this.props.totalScore}/>
       )
     }.bind(this))
 

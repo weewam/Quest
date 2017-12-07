@@ -171,11 +171,11 @@ class QuestScreen extends Component{
       this.updateCurrentScore(score)
       if(success) {
         if(this.state.currentScore/this.state.maxScore >= 0.66){
-          this.props.updateFinalScore(this.state.currentScore, 3)
+          this.props.updateFinalScore(this.state.currentScore, 3, this.props.selectedQuestIndex)
         } else if(this.state.currentScore/this.state.maxScore < 0.33){
-          this.props.updateFinalScore(this.state.currentScore, 1)
+          this.props.updateFinalScore(this.state.currentScore, 1, this.props.selectedQuestIndex)
         } else {
-          this.props.updateFinalScore(this.state.currentScore, 2)
+          this.props.updateFinalScore(this.state.currentScore, 2, this.props.selectedQuestIndex)
         }
         this.props.navigation.navigate("SuccessScreen")
       } else {
