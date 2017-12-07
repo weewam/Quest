@@ -89,6 +89,7 @@ export const locations = [
 		image: 'https://i.imgur.com/tgk3Iid.jpg',
 		coords: { lat: 59.339975, long: 18.038254 },
 		playable: 1,
+		about: "Join us for an evenening and cook fantastic food with the ambitious chefs at Cajsa Warg",
 		rewards: [],
 	},
 	{
@@ -116,9 +117,9 @@ export const locations = [
 		type: "CLUE",
 		// Clue fromat [[type of question 1: string, 2: graph], question, answer]
 		clues: [
-			[1, "What's the name of this country?", "Sweden"],
-			[1, "The famous Swedish furniture company", "IKEA"],
-			[1, "The famous Swedish cars manufacturers", "volvo"]
+			[1, "Who is the founder of Dramaten?", "Gustav"],
+			[1, "Which year was Dramaten completed, in its present form?", "1908"],
+			[1, "What kind of accident happened at Dramaten year 1825?", "Fire"],
 		],
 		rewards: [],
 	},

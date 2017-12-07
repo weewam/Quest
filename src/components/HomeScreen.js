@@ -150,7 +150,7 @@ class HomeScreen extends Component {
     }.bind(this))
 
     const geoLocationComponent = (
-      <Text style={[ styles.topBarText, { letterSpacing: 0.5 } ]}> {this.state.geoLocation} </Text>
+      <Text style={[styles.topBarText, { letterSpacing: 0.5 }]}> {this.state.geoLocation} </Text>
     )
 
     const questGalleryList = locations.map(function (item, i) {
@@ -167,40 +167,40 @@ class HomeScreen extends Component {
     return (
       <View style={styles.outerContainer}>
 
-        <ScrollView snapToInterval={HEIGHT} decelerationRate={ 'fast' } showsVerticalScrollIndicator={ false }>
+        <ScrollView snapToInterval={HEIGHT} decelerationRate={'fast'} showsVerticalScrollIndicator={false}>
           <View style={styles.innerContainer}>
             <View style={styles.background}>
               <Background width={WIDTH + 10} />
             </View>
 
             <View style={[styles.topBarContainer, styles.topBarContainerColumn]}>
-              <Image source={{ uri: this.props.userAvatar }} style={styles.topBarAvatar}/>
-              { geoLocationComponent }
+              <Image source={{ uri: this.props.userAvatar }} style={styles.topBarAvatar} />
+              {geoLocationComponent}
             </View>
             <View style={styles.content}>
               <Compass />
 
-              <Text style={styles.locationName}>{ selectedQuest.place }</Text>
-              <Text style={styles.locationDistance}>{ (Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km" }</Text>
+              <Text style={styles.locationName}>{selectedQuest.place}</Text>
+              <Text style={styles.locationDistance}>{(Math.floor(distanceFromPhone(currentPosition, selectedQuest.coords) * 10) / 10) + " km"}</Text>
             </View>
 
             <View style={styles.sliderItemContainer}>
               <View style={styles.focusedQuestContainer}>
-                <Text style={styles.focusedHeader}> { focusedQuest.provider} </Text>
-                <Text style={styles.focusedText}> { focusedQuest.name} </Text>
+                <Text style={styles.focusedHeader}> {!selectedQuest.treasureHunt && focusedQuest.provider} {selectedQuest.treasureHunt && "Find the location to claim your reward!"}</Text>
+                <Text style={styles.focusedText}> {!selectedQuest.treasureHunt && focusedQuest.name} </Text>
               </View>
 
               <ScrollView
-                ref={ (list) => this.questScroll = list }
+                ref={(list) => this.questScroll = list}
                 horizontal={true}
-                showsHorizontalScrollIndicator={ false }
+                showsHorizontalScrollIndicator={false}
                 onMomentumScrollEnd={this.updateSelectedQuestOnMomentumEnds.bind(this)}
-                decelerationRate={ 'fast' }
-                snapToAlignment={ 'center' }
-                snapToInterval={ buttonWidth + itemSpacing }
+                decelerationRate={'fast'}
+                snapToAlignment={'center'}
+                snapToInterval={buttonWidth + itemSpacing}
                 contentInset={{ top: 0, left: initScrollPosition, bottom: 0, right: initScrollPosition }}
-                contentOffset={{ x : -initScrollPosition }}>
-                { loctionList }
+                contentOffset={{ x: -initScrollPosition }}>
+                {loctionList}
               </ScrollView>
             </View>
           </View>
@@ -212,7 +212,7 @@ class HomeScreen extends Component {
 
             <View style={[styles.content]}>
               <View style={styles.questsOverview}>
-                { questGalleryList }
+                {questGalleryList}
               </View>
 
               <View style={styles.questOverviewFooter}>
@@ -237,8 +237,8 @@ const styles = StyleSheet.create({
   },
   background: {
     position: 'absolute',
-    bottom : 0,
-    left : -10,
+    bottom: 0,
+    left: -10,
     borderBottomColor: '#EAE086',
     borderBottomWidth: 10,
   },
