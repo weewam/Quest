@@ -89,6 +89,7 @@ export const locations = [
 		image: 'https://i.imgur.com/tgk3Iid.jpg',
 		coords: { lat: 59.339975, long: 18.038254 },
 		playable: 1,
+		about: "Join us for an evenening and cook fantastic food with the ambitious chefs at Cajsa Warg",
 		rewards: [],
 	},
 	{

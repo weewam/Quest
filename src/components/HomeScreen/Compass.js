@@ -27,8 +27,9 @@ class Compass extends Component {
 
     }
 
-    componentDidMount() {
-        ReactNativeHeading.start(1)
+    async componentDidMount() {
+        setInterval(() => {
+            ReactNativeHeading.start(1)
             .then(didStart => {
                 this.setState({
                     headingIsSupported: didStart,
@@ -38,6 +39,8 @@ class Compass extends Component {
         DeviceEventEmitter.addListener('headingUpdated', data => {
             this.state.heading = data.heading
         });
+        }, 10)
+        
 
     }
 
