@@ -53,13 +53,15 @@ class Compass extends Component {
         let longPos = currentPosition.long - selectedQuestCoords.long
         let headingRadians = this.state.heading * Math.PI / 180
         let res = Math.atan2(latPos, longPos) - headingRadians + 'rad'
-        console.log("RES: " + res)
         return res
     }
     render() {
+        let isTreasureHunt = locations[this.props.selectedQuestIndex].treasureHunt
+        let imageUrl = isTreasureHunt ? 'https://i.imgur.com/bXbOvun.png' : 'https://i.imgur.com/lUiIeq4.png'
+        let rotation = isTreasureHunt ? '0rad' : this.updateCompass()
         return (
             < View style={styles.container} >
-                <Image source={{ uri: 'https://i.imgur.com/lUiIeq4.png' }} style={{ width: 99 * 0.6, height: 147 * 0.6, transform: [{ rotate: this.updateCompass() }] }} />
+                <Image source={{ uri: imageUrl }} style={{ width: 99 * 0.6, height: 147 * 0.6, transform: [{ rotate: rotation }] }} />
             </View >
         );
     }
