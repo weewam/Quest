@@ -32,9 +32,9 @@ export default class QuestGalleryItem extends Component {
           <Image source={{ uri: image }} style={ styles.itemImage } />
 
           <View style={styles.starContainer}>
+            <Star width={10} color={ '#FFE16E' }/>
+            <Star width={10} color={ '#FFE16E' }/>
             <Star width={10} color={ '#CDD7E1' }/>
-            <Star width={10} color={ '#FFE16E' }/>
-            <Star width={10} color={ '#FFE16E' }/>
           </View>
         </View>
       </TouchableHighlight>

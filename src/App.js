@@ -30,7 +30,7 @@ import SettingsScreen from './components/HomeScreen/SettingsScreen'
 
 
 const { persistor, store } = configureStore()
-
+console.disableYellowBox = true;
 export default class App extends Component<{}> {
 
   render() {
